@@ -42,7 +42,7 @@ jobs:
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
-          build-args:
-            - REPOSITORY_URL=${{ github.repositoryUrl }}
-            - COMMIT_SHA=${{ github.sha }}
-            - RELEASE_TAG=${{ github.ref }}
+          build-args: |
+            REPOSITORY_URL=${{ github.repositoryUrl }}
+            COMMIT_SHA=${{ github.sha }}
+            RELEASE_TAG=${{ github.ref }}
