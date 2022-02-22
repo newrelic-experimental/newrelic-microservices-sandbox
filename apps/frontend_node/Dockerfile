@@ -1,13 +1,10 @@
-# Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
-# SPDX-License-Identifier: MIT-0
 FROM node:14
+
+
 
 # Create app directory
 WORKDIR /usr/src/app
 
-# Install app dependencies
-# A wildcard is used to ensure both package.json AND package-lock.json are copied
-# where available (npm@5+)
 COPY package.json package-lock.json ./
 
 RUN npm install
@@ -17,5 +14,11 @@ RUN npm install
 # Bundle app source
 COPY . .
 
-EXPOSE 9000
+ARG REPOSITORY_URL
+ARG COMMIT_SHA
+ARG RELEASE_TAG
+
+ENV NEW_RELIC_METADATA_REPOSITORY_URL = $REPOSITORY_URL
+ENV NEW_RELIC_METADATA_COMMIT = $COMMIT_SHA
+ENV NEW_RELIC_METADATA_RELEASE_TAG = $RELEASE_TAG
 CMD [ "node", "server.js" ]
