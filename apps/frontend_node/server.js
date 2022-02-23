@@ -29,6 +29,13 @@ app.use(express.static(path.join(__dirname, "public")));
 app.use(bodyParser.urlencoded({ extended: true }))
 
 app.get('/', (req, res, next) => {
+  res.send({
+    status: "ok"
+  })
+
+})
+
+app.get('/', (req, res, next) => {
   let query = req.query.queryStr;
 
   const requestOne = axios.get(baseProductUrl);
