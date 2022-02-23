@@ -4,6 +4,11 @@
 
 replicaCount: 1
 
+new_relic:
+  license_key:
+    secret: newrelic
+    key: license_key
+
 image:
   repository: ghcr.io/ericmittelhammer/newrelic-microservices-sandbox/frontend
   pullPolicy: IfNotPresent

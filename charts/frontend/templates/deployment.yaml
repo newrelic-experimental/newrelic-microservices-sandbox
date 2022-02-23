@@ -1,16 +1,16 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "frontend2.fullname" . }}
+  name: {{ include "frontend.fullname" . }}
   labels:
-    {{- include "frontend2.labels" . | nindent 4 }}
+    {{- include "frontend.labels" . | nindent 4 }}
 spec:
   {{- if not .Values.autoscaling.enabled }}
   replicas: {{ .Values.replicaCount }}
   {{- end }}
   selector:
     matchLabels:
-      {{- include "frontend2.selectorLabels" . | nindent 6 }}
+      {{- include "frontend.selectorLabels" . | nindent 6 }}
   template:
     metadata:
       {{- with .Values.podAnnotations }}
@@ -18,13 +18,13 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       labels:
-        {{- include "frontend2.selectorLabels" . | nindent 8 }}
+        {{- include "frontend.selectorLabels" . | nindent 8 }}
     spec:
       {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      serviceAccountName: {{ include "frontend2.serviceAccountName" . }}
+      serviceAccountName: {{ include "frontend.serviceAccountName" . }}
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
       containers:
@@ -33,6 +33,16 @@ spec:
             {{- toYaml .Values.securityContext | nindent 12 }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
+          env:
+            - name: NEW_RELIC_LICENSE_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.new_relic.license_key.secret }}
+                  key: {{ .Values.new_relic.license_key.key }}
+            {{- range .Values.env }}
+            - name: {{ .name }}
+              value: {{ .value }}
+            {{- end }} 
           ports:
             - name: http
               containerPort: 9000

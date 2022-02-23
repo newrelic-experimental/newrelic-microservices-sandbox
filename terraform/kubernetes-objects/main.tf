@@ -1,5 +1,5 @@
 locals {
-  new_relic_license_key_k8s_secret = "license_key"
+  new_relic_license_key_k8s_secret_key_name = "license_key"
 }
 
 data "aws_eks_cluster" "default" {

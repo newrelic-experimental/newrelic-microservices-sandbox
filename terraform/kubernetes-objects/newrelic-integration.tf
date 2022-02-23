@@ -4,7 +4,7 @@ resource "kubernetes_namespace" "newrelic" {
   }
 }
 
-resource "kubernetes_secret" "newrelic" {
+resource "kubernetes_secret" "newrelic_integration" {
 
   metadata {
     name = "newrelic"
@@ -12,7 +12,7 @@ resource "kubernetes_secret" "newrelic" {
   }
 
   data = {
-    (local.new_relic_license_key_k8s_secret) = var.new_relic_license_key
+    (local.new_relic_license_key_k8s_secret_key_name) = var.new_relic_license_key
   }
 }
 
@@ -28,12 +28,12 @@ resource "helm_release" "newrelic" {
   
   set {
     name = "global.customSecretName"
-    value = kubernetes_secret.newrelic.metadata[0].name
+    value = kubernetes_secret.newrelic_integration.metadata[0].name
   }
   
   set {
     name = "global.customSecretLicenseKey"
-    value = local.new_relic_license_key_k8s_secret
+    value = local.new_relic_license_key_k8s_secret_key_name
   }
   
   set {
