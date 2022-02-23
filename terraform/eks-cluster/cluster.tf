@@ -16,8 +16,8 @@ resource "aws_eks_cluster" "nr_sandbox" {
 }
 
 resource "aws_security_group" "cluster_nodes_security_group" {
-  name        = "terraform-eks-${var.cluster_name}-cluster-nodes-security-group"
-  description = "Allow HTTP traffic from the load balancer and within the group"
+  name        = "${var.cluster_name}-cluster-nodes-security-group"
+  description = "Allow HTTP traffic from the load balancer"
   vpc_id      = aws_vpc.nr_sandbox.id
 
   ingress {
@@ -36,18 +36,11 @@ resource "aws_security_group" "cluster_nodes_security_group" {
     security_groups  = [aws_security_group.alb_security_group.id]
   }
 
-  egress {
-    from_port        = 0
-    to_port          = 0
-    protocol         = "-1"
-    cidr_blocks      = ["0.0.0.0/0"]
-    ipv6_cidr_blocks = ["::/0"]
-  }
 }
 
 resource "aws_launch_template" "cluster_nodes" {
-  name = "terraform-eks-${var.cluster_name}-cluster-nodes-launch-template"
-  vpc_security_group_ids = [aws_security_group.cluster_nodes_security_group.id]
+  name = "${var.cluster_name}-cluster-nodes-launch-template"
+  vpc_security_group_ids = [aws_eks_cluster.nr_sandbox.vpc_config[0].cluster_security_group_id, aws_security_group.cluster_nodes_security_group.id]
 }
 
 resource "aws_eks_node_group" "nr_sandbox" {
@@ -55,6 +48,11 @@ resource "aws_eks_node_group" "nr_sandbox" {
   node_group_name = var.cluster_name
   node_role_arn   = aws_iam_role.nr_sandbox-node.arn
   subnet_ids      = aws_subnet.nr_sandbox.*.id
+  
+  launch_template {
+    id = aws_launch_template.cluster_nodes.id
+    version = aws_launch_template.cluster_nodes.latest_version
+  }
 
   scaling_config {
     desired_size = 3
