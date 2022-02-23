@@ -2,24 +2,20 @@ locals {
   new_relic_license_key_k8s_secret = "license_key"
 }
 
-data "aws_eks_cluster" "default" {
-  name = var.cluster_name
-}
-
 data "aws_eks_cluster_auth" "default" {
   name = var.cluster_name
 }
 
 provider "kubernetes" {
-  host                   = data.aws_eks_cluster.default.endpoint
-  cluster_ca_certificate = base64decode(data.aws_eks_cluster.default.certificate_authority[0].data)
+  host                   = data.aws_eks_cluster.nr-sandbox.endpoint
+  cluster_ca_certificate = base64decode(data.aws_eks_cluster.nr-sandbox.certificate_authority[0].data)
   token                  = data.aws_eks_cluster_auth.default.token
 }
 
 provider "helm" {
   kubernetes {
-    host                   = data.aws_eks_cluster.default.endpoint
-    cluster_ca_certificate = base64decode(data.aws_eks_cluster.default.certificate_authority[0].data)
+    host                   = data.aws_eks_cluster.nr-sandbox.endpoint
+    cluster_ca_certificate = base64decode(data.aws_eks_cluster.nr-sandbox.certificate_authority[0].data)
     token                  = data.aws_eks_cluster_auth.default.token
   }
 }
@@ -27,8 +23,8 @@ provider "helm" {
 resource "local_file" "kubeconfig" {
   sensitive_content = templatefile("${path.module}/kubeconfig.tpl", {
     cluster_name = var.cluster_name,
-    clusterca    = data.aws_eks_cluster.default.certificate_authority[0].data,
-    endpoint     = data.aws_eks_cluster.default.endpoint,
+    clusterca    = data.aws_eks_cluster.nr-sandbox.certificate_authority[0].data,
+    endpoint     = data.aws_eks_cluster.nr-sandbox.endpoint,
     })
   filename          = "./${var.cluster_name}.kubeconfig"
 }
