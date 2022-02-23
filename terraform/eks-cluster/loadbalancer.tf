@@ -41,7 +41,7 @@ resource "aws_security_group" "alb_security_group" {
 }
 
 resource "aws_lb" "nr_sandbox" {
-  name               = "nr-alb"
+  name               = "newrelic-sandbox"
   internal           = false
   load_balancer_type = "application"
   security_groups    = [aws_security_group.alb_security_group.id]
