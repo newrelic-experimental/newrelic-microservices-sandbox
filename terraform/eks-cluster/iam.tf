@@ -1,4 +1,4 @@
-resource "aws_iam_role" "nr-sandbox-cluster" {
+resource "aws_iam_role" "nr_sandbox-cluster" {
   name = var.cluster_name
 
   assume_role_policy = <<POLICY
@@ -17,19 +17,19 @@ resource "aws_iam_role" "nr-sandbox-cluster" {
 POLICY
 }
 
-resource "aws_iam_role_policy_attachment" "nr-sandbox-AmazonEKSClusterPolicy" {
+resource "aws_iam_role_policy_attachment" "nr_sandbox-AmazonEKSClusterPolicy" {
   policy_arn = "arn:aws:iam::aws:policy/AmazonEKSClusterPolicy"
-  role       = aws_iam_role.nr-sandbox-cluster.name
+  role       = aws_iam_role.nr_sandbox-cluster.name
 }
 
 # Optionally, enable Security Groups for Pods
 # Reference: https://docs.aws.amazon.com/eks/latest/userguide/security-groups-for-pods.html
-resource "aws_iam_role_policy_attachment" "nr-sandbox-AmazonEKSVPCResourceController" {
+resource "aws_iam_role_policy_attachment" "nr_sandbox-AmazonEKSVPCResourceController" {
   policy_arn = "arn:aws:iam::aws:policy/AmazonEKSVPCResourceController"
-  role       = aws_iam_role.nr-sandbox-cluster.name
+  role       = aws_iam_role.nr_sandbox-cluster.name
 }
 
-resource "aws_iam_role" "nr-sandbox-node" {
+resource "aws_iam_role" "nr_sandbox-node" {
   name = "${var.cluster_name}-node"
 
   assume_role_policy = jsonencode({
@@ -44,17 +44,17 @@ resource "aws_iam_role" "nr-sandbox-node" {
   })
 }
 
-resource "aws_iam_role_policy_attachment" "nr-sandbox-AmazonEKSWorkerNodePolicy" {
+resource "aws_iam_role_policy_attachment" "nr_sandbox-AmazonEKSWorkerNodePolicy" {
   policy_arn = "arn:aws:iam::aws:policy/AmazonEKSWorkerNodePolicy"
-  role       = aws_iam_role.nr-sandbox-node.name
+  role       = aws_iam_role.nr_sandbox-node.name
 }
 
-resource "aws_iam_role_policy_attachment" "nr-sandbox-AmazonEKS_CNI_Policy" {
+resource "aws_iam_role_policy_attachment" "nr_sandbox-AmazonEKS_CNI_Policy" {
   policy_arn = "arn:aws:iam::aws:policy/AmazonEKS_CNI_Policy"
-  role       = aws_iam_role.nr-sandbox-node.name
+  role       = aws_iam_role.nr_sandbox-node.name
 }
 
-resource "aws_iam_role_policy_attachment" "nr-sandbox-AmazonEC2ContainerRegistryReadOnly" {
+resource "aws_iam_role_policy_attachment" "nr_sandbox-AmazonEC2ContainerRegistryReadOnly" {
   policy_arn = "arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly"
-  role       = aws_iam_role.nr-sandbox-node.name
+  role       = aws_iam_role.nr_sandbox-node.name
 }

@@ -1,7 +1,13 @@
-output "alb-hostname" {
-  value = aws_lb.k8s-acc.dns_name
+output "alb_hostname" {
+  value = aws_lb.nr_sandbox.dns_name
 }
 
-output "kubeconfig" {
-  value = abspath("${path.root}/${local_file.kubeconfig.filename}")
+output "vpc_id" {
+  value = aws_vpc.nr_sandbox.id
 }
+
+output "cluster_id" {
+  value = aws_eks_cluster.nr_sandbox.id
+}
+
+
