@@ -15,44 +15,11 @@ resource "aws_eks_cluster" "nr_sandbox" {
   ]
 }
 
-resource "aws_security_group" "cluster_nodes_security_group" {
-  name        = "${var.cluster_name}-cluster-nodes-security-group"
-  description = "Allow HTTP traffic from the load balancer"
-  vpc_id      = aws_vpc.nr_sandbox.id
-
-  ingress {
-    description      = "TLS from Load Balancer"
-    from_port        = 443
-    to_port          = 443
-    protocol         = "tcp"
-    security_groups  = [aws_security_group.alb_security_group.id]
-  }
-  
-  ingress {
-    description      = "HTTP from Load Balancer"
-    from_port        = 80
-    to_port          = 80
-    protocol         = "tcp"
-    security_groups  = [aws_security_group.alb_security_group.id]
-  }
-
-}
-
-resource "aws_launch_template" "cluster_nodes" {
-  name = "${var.cluster_name}-cluster-nodes-launch-template"
-  vpc_security_group_ids = [aws_eks_cluster.nr_sandbox.vpc_config[0].cluster_security_group_id, aws_security_group.cluster_nodes_security_group.id]
-}
-
 resource "aws_eks_node_group" "nr_sandbox" {
   cluster_name    = aws_eks_cluster.nr_sandbox.name
   node_group_name = var.cluster_name
   node_role_arn   = aws_iam_role.nr_sandbox-node.arn
   subnet_ids      = aws_subnet.nr_sandbox.*.id
-  
-  launch_template {
-    id = aws_launch_template.cluster_nodes.id
-    version = aws_launch_template.cluster_nodes.latest_version
-  }
 
   scaling_config {
     desired_size = 3

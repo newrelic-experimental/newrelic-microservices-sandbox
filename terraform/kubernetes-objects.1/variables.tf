@@ -5,7 +5,3 @@ variable "cluster_name" {
 variable "new_relic_license_key" {
     type = string
 }
-
-variable "frontend_chart" {
-  type = string
-}

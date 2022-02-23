@@ -1,7 +1,3 @@
-output "alb_hostname" {
-  value = aws_lb.nr_sandbox.dns_name
-}
-
 output "vpc_id" {
   value = aws_vpc.nr_sandbox.id
 }
