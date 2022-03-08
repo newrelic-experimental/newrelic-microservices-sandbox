@@ -24,6 +24,11 @@ if AGG_APP_URL is None:
 
 flask_app.logger.info('AGG_APP_URL is ' + str(AGG_APP_URL))
 
+@flask_app.route('/ping')
+def ping():
+    return "healthy"
+
+
 # Fix of returning swagger.json on HTTP
 @property
 def specs_url(self):
@@ -39,7 +44,7 @@ app = Api(app = flask_app,
           version = "1.0",
           title = "Product Catalog",
           description = "Complete dictionary of Products available in the Product Catalog")
-
+          
 name_space = app.namespace('products', description='Products from Product Catalog')
 
 model = app.model('Name Model',
@@ -74,11 +79,6 @@ class Products(Resource):
         except Exception as e:
             flask_app.logger.error('Error 400 Could not retrieve information ' + e.__doc__ )
             name_space.abort(400, e.__doc__, status = "Could not retrieve information", statusCode = "400")
-
-@name_space.route('/ping')
-class Ping(Resource):
-    def get(self):
-        return "healthy"
 
 @name_space.route("/<int:id>")
 @name_space.param('id', 'Specify the ProductId')
