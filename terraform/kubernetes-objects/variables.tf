@@ -9,3 +9,7 @@ variable "new_relic_license_key" {
 variable "frontend_chart" {
   type = string
 }
+
+variable "product_catalog_chart" {
+  type = string
+}
