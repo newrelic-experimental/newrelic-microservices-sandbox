@@ -39,6 +39,8 @@ spec:
                 secretKeyRef:
                   name: {{ .Values.new_relic.license_key.secret }}
                   key: {{ .Values.new_relic.license_key.key }}
+            - name: BASE_PRODUCTS_URL
+              value: http://product-catalog/products/
             {{- range .Values.env }}
             - name: {{ .name }}
               value: {{ .value }}
