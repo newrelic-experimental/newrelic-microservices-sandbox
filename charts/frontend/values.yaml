@@ -4,6 +4,9 @@
 
 replicaCount: 1
 
+container:
+  httpPort: 9000
+
 new_relic:
   license_key:
     secret: newrelic
@@ -43,7 +46,7 @@ securityContext: {}
 
 service:
   type: ClusterIP
-  port: 8001
+  port: 80
 
 ingress:
   enabled: true

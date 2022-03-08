@@ -12,13 +12,13 @@ app.use(bodyParser.urlencoded({ extended: false }));
 
 Prometheus.collectDefaultMetrics();
 
-var baseProductUrl = process.env.BASE_URL;
+var baseProductUrl = process.env.BASE_PRODUCTS_URL;
 
 if (baseProductUrl === undefined) {
   baseProductUrl = 'http://localhost:5000/products/';
 }
 
-console.log(baseProductUrl);
+console.log(`Using products url: ${baseProductUrl}`);
 
 // ========================
 // Middlewares
@@ -28,12 +28,12 @@ app.use(express.static(path.join(__dirname, "public")));
 
 app.use(bodyParser.urlencoded({ extended: true }))
 
-app.get('/', (req, res, next) => {
-  res.send({
-    status: "ok"
-  })
+// app.get('/', (req, res, next) => {
+//   res.send({
+//     status: "ok"
+//   })
 
-})
+// })
 
 app.get('/', (req, res, next) => {
   let query = req.query.queryStr;
@@ -87,6 +87,6 @@ app.get('/metrics', (req, res, next) => {
 })
 
 
-app.listen(9000, function() {
-  console.log('listening on 9000')
+app.listen(process.env.HTTP_PORT, function() {
+  console.log('listening on ${process.env.HTTP_PORT}')
 })
