@@ -39,13 +39,11 @@ spec:
                 secretKeyRef:
                   name: {{ .Values.new_relic.license_key.secret }}
                   key: {{ .Values.new_relic.license_key.key }}
-            {{- range .Values.env }}
-            - name: {{ .name }}
-              value: {{ .value }}
-            {{- end }} 
+            - name: HTTP_PORT
+              value: {{ .Values.container.httpPort }}
           ports:
             - name: http
-              containerPort: {{ .Values.containerPort }}
+              containerPort: {{ .Values.container.httpPort }}
               protocol: TCP
           livenessProbe:
             httpGet:

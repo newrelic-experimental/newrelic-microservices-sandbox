@@ -88,5 +88,5 @@ app.get('/metrics', (req, res, next) => {
 
 
 app.listen(process.env.HTTP_PORT, function() {
-  console.log('listening on ${process.env.HTTP_PORT}')
+  console.log(`listening on ${process.env.HTTP_PORT}`)
 })
