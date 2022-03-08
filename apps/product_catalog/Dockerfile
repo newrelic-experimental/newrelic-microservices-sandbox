@@ -16,6 +16,14 @@ RUN pip install -r requirements.txt
 
 COPY . /app
 
+ARG REPOSITORY_URL
+ARG COMMIT_SHA
+ARG RELEASE_TAG
+
+ENV NEW_RELIC_METADATA_REPOSITORY_URL = $REPOSITORY_URL
+ENV NEW_RELIC_METADATA_COMMIT = $COMMIT_SHA
+ENV NEW_RELIC_METADATA_RELEASE_TAG = $RELEASE_TAG
+
 # ENV AGG_APP_URL='http://prodinfo.octank-mesh-ns.svc.cluster.local:3000/productAgreement'
 
 #WORKDIR /docker_app
