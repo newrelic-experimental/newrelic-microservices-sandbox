@@ -1,0 +1,18 @@
+name: build-fe
+
+on:
+  push:
+    tags:
+      - 'v[0-9]+.[0-9]+.[0-9]+'
+    branches:
+      - 'main'
+    paths:
+      - 'apps/product_catalog/**'
+
+jobs:
+  build-push-image:
+    uses: ./.github/workflows/build-push-image.yml
+    with:
+      image_name: product-catalog
+      build_context: ./apps/product_catalog
+
