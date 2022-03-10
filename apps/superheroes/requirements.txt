@@ -1,6 +1,7 @@
 aniso8601==9.0.1
 attrs==21.4.0
 aws-xray-sdk==2.6.0
+black==22.1.0
 boto3==1.9.220
 botocore==1.12.253
 certifi==2021.10.8
@@ -21,7 +22,10 @@ jmespath==0.10.0
 jsonpickle==2.1.0
 jsonschema==4.4.0
 MarkupSafe==2.1.0
+mypy-extensions==0.4.3
 newrelic==7.6.0.173
+pathspec==0.9.0
+platformdirs==2.5.1
 PyMySQL==1.0.2
 pyrsistent==0.18.1
 python-dateutil==2.8.2
@@ -30,6 +34,8 @@ requests==2.24.0
 s3transfer==0.2.1
 six==1.16.0
 tinydb==4.7.0
+tomli==2.0.1
+typed-ast==1.5.2
 typing-extensions==4.1.1
 urllib3==1.25.11
 Werkzeug==2.0.3
