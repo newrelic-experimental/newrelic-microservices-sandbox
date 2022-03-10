@@ -1,4 +1,4 @@
-name: build-product-catalog
+name: build-superheroes
 
 on:
   push:
@@ -7,12 +7,12 @@ on:
     branches:
       - 'main'
     paths:
-      - 'apps/product_catalog/**'
+      - 'apps/superheroes/**'
 
 jobs:
   build-push-image:
     uses: ./.github/workflows/build-push-image.yml
     with:
-      image_name: product-catalog
-      build_context: ./apps/product_catalog
+      image_name: superheroes
+      build_context: ./apps/superheroes
 
