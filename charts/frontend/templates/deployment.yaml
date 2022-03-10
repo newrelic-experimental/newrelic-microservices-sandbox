@@ -39,8 +39,6 @@ spec:
                 secretKeyRef:
                   name: {{ .Values.new_relic.license_key.secret }}
                   key: {{ .Values.new_relic.license_key.key }}
-            - name: BASE_PRODUCTS_URL
-              value: "http://product-catalog/products/"
             - name: HTTP_PORT
               value: "{{ .Values.container.httpPort }}"
           ports:

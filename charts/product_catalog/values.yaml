@@ -1,4 +1,4 @@
-# Default values for product_catalog.
+# Default values for superheroes.
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 
@@ -13,7 +13,7 @@ new_relic:
     key: license_key
     
 image:
-  repository: ghcr.io/ericmittelhammer/newrelic-microservices-sandbox/product-catalog
+  repository: ghcr.io/ericmittelhammer/newrelic-microservices-sandbox/superheroes
   pullPolicy: IfNotPresent
   # Overrides the image tag whose default is the chart appVersion.
   tag: ""
