@@ -1,13 +1,15 @@
+import logging
+import os
+
 from flask import Flask, request, url_for
 from flask_cors import CORS
-import requests
-import os
-import logging
+
+from apis.v1 import blueprint as api_v1
+
 
 logging.basicConfig(level=logging.INFO)
 
 
-from apis.v1 import blueprint as api_v1
 
 
 app = Flask(__name__)

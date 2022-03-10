@@ -1,6 +1,9 @@
-from flask_restx import Namespace, Resource, fields, errors
-from repository import db, Superheroes
 import logging
+
+from flask_restx import Namespace, Resource, errors, fields
+
+from repository import Superheroes, db
+
 
 api = Namespace("superheroes", description="Api for working with Superheroes")
 
