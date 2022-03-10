@@ -33,15 +33,15 @@ resource "helm_release" "frontend" {
   
 }
 
-resource "helm_release" "product_catalog" {
+resource "helm_release" "superheroes" {
 
   depends_on = [helm_release.ingress_nginx]
   
   wait       = true
   timeout    = 600
 
-  name       = "product-catalog"
-  chart      = var.product_catalog_chart
+  name       = "superheroes"
+  chart      = var.superheroes_chart
   
   recreate_pods = true
   

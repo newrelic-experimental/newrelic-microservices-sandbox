@@ -10,6 +10,6 @@ variable "frontend_chart" {
   type = string
 }
 
-variable "product_catalog_chart" {
+variable "superheroes_chart" {
   type = string
 }
