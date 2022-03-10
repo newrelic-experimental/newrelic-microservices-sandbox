@@ -7,9 +7,9 @@ from .superheroes import api as superheroes_api
 blueprint = Blueprint("apiV1", __name__)
 api = Api(
     blueprint,
-    title="My Title",
+    title="Superhero Api",
     version="1.0",
-    description="A description",
+    description="v1 of the Superhero Api",
     # All API metadatas
 )
 

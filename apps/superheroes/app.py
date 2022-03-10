@@ -14,7 +14,7 @@ logging.basicConfig(level=logging.INFO)
 
 app = Flask(__name__)
 app.config["RESTX_ERROR_404_HELP"] = False
-app.register_blueprint(api_v1, url_prefix="/api/v1")
+app.register_blueprint(api_v1, url_prefix="/v1")
 
 log_level = logging.INFO
 app.logger.setLevel(log_level)
