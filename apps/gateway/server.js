@@ -1,3 +1,4 @@
+require('@newrelic/koa');
 const Koa = require('koa');
 const Router = require('@koa/router');
 const pino = require('pino');

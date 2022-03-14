@@ -10,6 +10,7 @@
   "license": "ISC",
   "dependencies": {
     "@koa/router": "^10.1.1",
+    "@newrelic/koa": "^6.1.2",
     "construct-url": "^1.0.5",
     "http-proxy": "^1.18.1",
     "http-proxy-rules": "^1.1.3",
