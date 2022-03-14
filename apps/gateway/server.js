@@ -17,9 +17,9 @@ const logger = require('koa-pino-logger')({
 
 const proxy = require('./middleware/proxy');
 
-const superheroes_protocol = process.env.SUPERHEROES_PROTOCOL || "http"
-const superheroes_host = process.env.SUPERHEROES_HOST || "superheroes"
-const superheroes_port = process.env.SUPERHEROES_PORT || "5000"
+const superheroes_protocol = process.env.SUPERHEROES_SERVICE_PROTOCOL || "http"
+const superheroes_host = process.env.SUPERHEROES_SERVICE_HOST || "superheroes"
+const superheroes_port = process.env.SUPERHEROES_SERVICE_PORT || "5000"
 
 const app = new Koa();
 const router = new Router();
