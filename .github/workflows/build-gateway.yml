@@ -1,4 +1,4 @@
-name: build-frontend
+name: build-gateway
 
 on:
   push:
