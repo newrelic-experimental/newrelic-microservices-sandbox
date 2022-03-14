@@ -13,6 +13,6 @@ jobs:
   build-push-image:
     uses: ./.github/workflows/build-push-image.yml
     with:
-      image_name: frontend
+      image_name: gateway
       build_context: ./apps/gateway
 
