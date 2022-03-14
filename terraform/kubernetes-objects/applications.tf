@@ -9,15 +9,15 @@ resource "kubernetes_secret" "newrelic_applications" {
   }
 }
 
-resource "helm_release" "frontend" {
+resource "helm_release" "gateway" {
 
   depends_on = [helm_release.ingress_nginx]
   
   wait       = true
   timeout    = 600
 
-  name       = "frontend"
-  chart      = var.frontend_chart
+  name       = "gateway"
+  chart      = var.gateway_chart
   
   recreate_pods = true
   

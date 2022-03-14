@@ -6,7 +6,7 @@ variable "new_relic_license_key" {
     type = string
 }
 
-variable "frontend_chart" {
+variable "gateway_chart" {
   type = string
 }
 

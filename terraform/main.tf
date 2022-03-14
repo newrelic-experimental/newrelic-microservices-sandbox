@@ -20,6 +20,6 @@ module "kubernetes_objects" {
   source = "./kubernetes-objects"
   cluster_name = module.eks_cluster.cluster_id
   new_relic_license_key = var.new_relic_license_key
-  frontend_chart = abspath("${path.module}/../charts/frontend")
+  gateway_chart = abspath("${path.module}/../charts/gateway")
   superheroes_chart = abspath("${path.module}/../charts/superheroes")
 }
