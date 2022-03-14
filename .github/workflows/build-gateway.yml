@@ -7,12 +7,12 @@ on:
     branches:
       - 'main'
     paths:
-      - 'apps/frontend_node/**'
+      - 'apps/gateway/**'
 
 jobs:
   build-push-image:
     uses: ./.github/workflows/build-push-image.yml
     with:
       image_name: frontend
-      build_context: ./apps/frontend_node
+      build_context: ./apps/gateway
 
