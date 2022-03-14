@@ -12,13 +12,14 @@ module.exports = function createProxyMiddleware(proxyRules) {
   
   return (ctx, next) => {
     return new Promise((resolve, reject) => {
+      const originalPath = ctx.path
       const target = rules.match(ctx.req);
       
       if (target) {
-        ctx.log.info(`proxying ${ctx.req.path} to ${target}`);
+        ctx.log.info(`proxying ${originalPath} to ${target}`);
         
         ctx.res.on('close', () => {
-          reject(new Error(`Http response closed while proxying ${ctx.req.path}`));
+          reject(new Error(`Http response closed while proxying ${originalPath}`));
         })
   
         ctx.res.on('finish', () => {

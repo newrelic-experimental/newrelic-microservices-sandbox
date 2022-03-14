@@ -19,6 +19,7 @@ const proxy = require('./middleware/proxy');
 
 const superheroes_protocol = process.env.SUPERHEROES_PROTOCOL || "http"
 const superheroes_host = process.env.SUPERHEROES_HOST || "superheroes"
+const superheroes_port = process.env.SUPERHEROES_PORT || "5000"
 
 const app = new Koa();
 const router = new Router();
@@ -31,7 +32,7 @@ router.get('/ping', (ctx, next) => {
 
 
 router.all('/api/(.*)', proxy({
-  '/api/superheroes(.*)': `${superheroes_protocol}://${superheroes_host}/v1/superheroes$1`
+  '/api/superheroes(.*)': `${superheroes_protocol}://${superheroes_host}:${superheroes_port}/v1/superheroes$1`
 }));
 
 app
