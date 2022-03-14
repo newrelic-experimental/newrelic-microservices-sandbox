@@ -17,6 +17,7 @@ const logger = require('koa-pino-logger')({
 });
 
 const proxy = require('./middleware/proxy');
+const apiversion = require('./middleware/apiversion');
 
 const superheroes_protocol = process.env.SUPERHEROES_SERVICE_PROTOCOL || "http"
 const superheroes_host = process.env.SUPERHEROES_SERVICE_HOST || "superheroes"
@@ -32,8 +33,8 @@ router.get('/ping', (ctx, next) => {
 });
 
 
-router.all('/api/(.*)', proxy({
-  '/api/superheroes(.*)': `${superheroes_protocol}://${superheroes_host}:${superheroes_port}/v1/superheroes$1`
+router.all('/api/(.*)', apiversion(), proxy({
+  '/api/superheroes(.*)': `${superheroes_protocol}://${superheroes_host}:${superheroes_port}/:version/superheroes$1`
 }));
 
 app
