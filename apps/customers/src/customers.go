@@ -33,7 +33,7 @@ type Customer struct {
 	ApiVersion string  `json:"apiVersion"`
 }
 
-func getCustomer(db *sql.DB) func(c *gin.Context) {
+func getCustomer(db *sql.DB) (getCustomer func(c *gin.Context)) {
 
 	return func(c *gin.Context) {
 		id := c.Param("id")
@@ -66,7 +66,7 @@ func getCustomer(db *sql.DB) func(c *gin.Context) {
 
 }
 
-func token(db *sql.DB) func(c *gin.Context) {
+func token(db *sql.DB) (token func(c *gin.Context)) {
 
 	return func(c *gin.Context) {
 
@@ -122,7 +122,7 @@ type Authorization struct {
 	Token string `json:"token" binding:"required"`
 }
 
-func authorize(db *sql.DB) func(c *gin.Context) {
+func authorize(db *sql.DB) (authorize func(c *gin.Context)) {
 
 	return func(c *gin.Context) {
 

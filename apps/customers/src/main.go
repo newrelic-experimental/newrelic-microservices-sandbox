@@ -9,6 +9,8 @@ import (
 
 	"github.com/gin-gonic/gin"
 	_ "github.com/go-sql-driver/mysql"
+	nrgin "github.com/newrelic/go-agent/v3/integrations/nrgin"
+	"github.com/newrelic/go-agent/v3/newrelic"
 )
 
 func getEnv(name string, defaultValue string) string {
@@ -34,6 +36,15 @@ func main() {
 	// 	panic(connectorErr)
 	// }
 
+	app, err := newrelic.NewApplication(
+		newrelic.ConfigAppName("Customers Service"),
+		newrelic.ConfigLicense(os.Getenv("NEW_RELIC_LICENSE_KEY")),
+		newrelic.ConfigDebugLogger(os.Stdout),
+	)
+	if nil != err {
+		log.Print(err)
+	}
+
 	// db := sql.OpenDB(connector)
 	connStr := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s", getEnv("MYSQL_USERNAME", "root"), getEnv("MYSQL_PASSWORD", "password"), getEnv("MYSQL_HOST", "localhost"), getEnv("MYSQL_PORT", "3306"), getEnv("MYSQL_DATABASE", "customers"))
 	log.Print(fmt.Sprintf("Connecting to %s", connStr))
@@ -55,6 +66,8 @@ func main() {
 	//log.Print("Connected to database")
 
 	router := gin.Default()
+
+	router.Use(nrgin.Middleware(app))
 
 	router.GET("/ping", func(c *gin.Context) {
 		c.JSON(200, gin.H{
