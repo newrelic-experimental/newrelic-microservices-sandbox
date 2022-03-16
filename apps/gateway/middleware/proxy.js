@@ -15,11 +15,11 @@ module.exports = function createProxyMiddleware(proxyRules) {
       const originalPath = ctx.path
       let target = rules.match(ctx.req);
       
-      if (ctx.state.apiVersion) {
-        target = target.replace(':version', ctx.state.apiVersion);
-      }
-      
       if (target) {
+        if (ctx.state.apiVersion) {
+          target = target.replace(':version', ctx.state.apiVersion);
+        }
+      
         ctx.log.info(`proxying ${originalPath} to ${target}`);
         
         ctx.res.on('close', () => {

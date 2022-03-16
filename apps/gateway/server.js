@@ -23,6 +23,10 @@ const superheroes_protocol = process.env.SUPERHEROES_SERVICE_PROTOCOL || "http"
 const superheroes_host = process.env.SUPERHEROES_SERVICE_HOST || "superheroes"
 const superheroes_port = process.env.SUPERHEROES_SERVICE_PORT || "5000"
 
+const customers_protocol = process.env.CUSTOMERS_SERVICE_PROTOCOL || "http"
+const customers_host = process.env.CUSTOMERS_SERVICE_HOST || "customers"
+const customers_port = process.env.CUSTOMERS_SERVICE_PORT || "5010"
+
 const app = new Koa();
 const router = new Router();
 
@@ -34,7 +38,8 @@ router.get('/ping', (ctx, next) => {
 
 
 router.all('/api/(.*)', apiversion(), proxy({
-  '/api/superheroes(.*)': `${superheroes_protocol}://${superheroes_host}:${superheroes_port}/:version/superheroes$1`
+  '/api/superheroes(.*)': `${superheroes_protocol}://${superheroes_host}:${superheroes_port}/:version/superheroes$1`,
+  '/api/customers(.*)': `${customers_protocol}://${customers_host}:${customers_port}/customers$1`
 }));
 
 app
