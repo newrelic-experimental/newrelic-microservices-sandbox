@@ -14,3 +14,14 @@ services:
       HTTP_PORT: "5000"
     ports:
       - "8081:5000"
+  mysql:
+    image: mysql
+    ports: 
+      - "3306:3306"
+    volumes:
+      - "${PWD}/customers/customers.sql.gz:/docker-entrypoint-initdb.d/customers.sql.gz"
+    environment:
+      MYSQL_ROOT_PASSWORD: "password"
+      MYSQL_DATABASE: "customers"
+    #command: ["mysqld", "&&", "mysql", "-uroot", "-p\"password", "<", "/var/data/customers.sql"]
+    #command: ["mysqld"]
