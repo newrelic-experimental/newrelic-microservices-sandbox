@@ -4,6 +4,7 @@ import (
 	"database/sql"
 
 	"github.com/gin-gonic/gin"
+	"github.com/google/uuid"
 )
 
 type Contact struct {
@@ -26,9 +27,10 @@ type Address struct {
 }
 
 type Customer struct {
-	Id      string  `json:"id"`
-	Contact Contact `json:"contact"`
-	Company Company `json:"company"`
+	Id         string  `json:"id"`
+	Contact    Contact `json:"contact"`
+	Company    Company `json:"company"`
+	ApiVersion string  `json:"apiVersion"`
 }
 
 func getCustomer(db *sql.DB) func(c *gin.Context) {
@@ -45,8 +47,7 @@ func getCustomer(db *sql.DB) func(c *gin.Context) {
 
 		var customer Customer
 
-		// Query the square-number of 13
-		err = stmtOut.QueryRow(id).Scan(&customer.Id, &customer.Contact.FirstName, &customer.Contact.LastName, &customer.Contact.Email, &customer.Contact.Title, &customer.Company.Name, &customer.Company.Address.Street, &customer.Company.Address.City, &customer.Company.Address.State, &customer.Company.Address.PostalCode)
+		err = stmtOut.QueryRow(id).Scan(&customer.Id, &customer.Contact.FirstName, &customer.Contact.LastName, &customer.Contact.Email, &customer.Contact.Title, &customer.Company.Name, &customer.Company.Address.Street, &customer.Company.Address.City, &customer.Company.Address.State, &customer.Company.Address.PostalCode, &customer.ApiVersion)
 		if err != nil {
 			if err == sql.ErrNoRows {
 				c.JSON(404, gin.H{
@@ -61,6 +62,102 @@ func getCustomer(db *sql.DB) func(c *gin.Context) {
 		}
 
 		c.JSON(200, customer)
+	}
+
+}
+
+func token(db *sql.DB) func(c *gin.Context) {
+
+	return func(c *gin.Context) {
+
+		//get a random customer
+		stmtOut, err := db.Prepare("SELECT * FROM customers ORDER BY RAND() LIMIT 1")
+		if err != nil {
+			c.JSON(500, gin.H{
+				"message": err.Error(),
+			})
+		}
+		defer stmtOut.Close()
+
+		var customer Customer
+
+		err = stmtOut.QueryRow().Scan(&customer.Id, &customer.Contact.FirstName, &customer.Contact.LastName, &customer.Contact.Email, &customer.Contact.Title, &customer.Company.Name, &customer.Company.Address.Street, &customer.Company.Address.City, &customer.Company.Address.State, &customer.Company.Address.PostalCode, &customer.ApiVersion)
+		if err != nil {
+			c.JSON(500, gin.H{
+				"message": err.Error(),
+			})
+			return
+		}
+
+		//generate a new token
+		token := uuid.New()
+
+		//insert it into the token table
+		stmtIns, err := db.Prepare("INSERT INTO tokens VALUES( ?, ? )")
+		if err != nil {
+			c.JSON(500, gin.H{
+				"message": err.Error(),
+			})
+			return
+		}
+		defer stmtIns.Close()
+
+		_, err = stmtIns.Exec(token.String(), &customer.Id)
+		if err != nil {
+			c.JSON(500, gin.H{
+				"message": err.Error(),
+			})
+			return
+		}
+
+		c.JSON(200, gin.H{
+			"token":    token.String(),
+			"customer": &customer,
+		})
+	}
+
+}
+
+type Authorization struct {
+	Token string `json:"token" binding:"required"`
+}
+
+func authorize(db *sql.DB) func(c *gin.Context) {
+
+	return func(c *gin.Context) {
+
+		var payload Authorization
+		if err := c.ShouldBindJSON(&payload); err != nil {
+			c.JSON(400, gin.H{"message": "Bad Request"})
+			return
+		}
+
+		stmtOut, err := db.Prepare("SELECT customer_id FROM tokens WHERE token = ?")
+		if err != nil {
+			c.JSON(500, gin.H{
+				"message": err.Error(),
+			})
+		}
+		defer stmtOut.Close()
+
+		var validCustomerId string
+
+		err = stmtOut.QueryRow(payload.Token).Scan(&validCustomerId)
+		if err != nil {
+			if err == sql.ErrNoRows {
+				c.JSON(403, gin.H{
+					"message": "unauthorized",
+				})
+			} else {
+				c.JSON(500, gin.H{
+					"message": err.Error(),
+				})
+			}
+			return
+		}
+
+		c.JSON(200, gin.H{"customerId": validCustomerId})
+
 	}
 
 }

@@ -58,5 +58,9 @@ func main() {
 
 	router.GET("/customer/:id", getCustomer(db))
 
+	router.POST("/customer/token", token(db))
+
+	router.POST("/customer/authorize", authorize(db))
+
 	router.Run() // listen and serve on 0.0.0.0:8080 (for windows "localhost:8080")
 }
