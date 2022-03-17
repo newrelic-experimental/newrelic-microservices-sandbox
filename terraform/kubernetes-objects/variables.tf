@@ -13,3 +13,11 @@ variable "gateway_chart" {
 variable "superheroes_chart" {
   type = string
 }
+
+variable "customers_chart" {
+  type = string
+}
+
+variable "mysql_chart" {
+  type = string
+}

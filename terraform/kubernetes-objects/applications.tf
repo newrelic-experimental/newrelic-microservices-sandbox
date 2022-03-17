@@ -56,3 +56,41 @@ resource "helm_release" "superheroes" {
   }
   
 }
+  
+resource "helm_release" "customers" {
+
+  depends_on = [helm_release.ingress_nginx, helm_release.mysql]
+  
+  wait       = true
+  timeout    = 600
+
+  name       = "customers"
+  chart      = var.customers_chart
+  
+  recreate_pods = true
+  
+  set {
+    name = "new_relic.license_key.secret"
+    value = kubernetes_secret.newrelic_applications.metadata[0].name
+  }
+  
+  set {
+    name = "new_relic.license_key.key"
+    value = local.new_relic_license_key_k8s_secret_key_name
+  }
+  
+}
+
+resource "helm_release" "mysql" {
+
+  depends_on = [helm_release.ingress_nginx]
+  
+  wait       = true
+  timeout    = 600
+
+  name       = "mysql"
+  chart      = var.mysql_chart
+  
+  recreate_pods = true
+  
+}

@@ -22,4 +22,6 @@ module "kubernetes_objects" {
   new_relic_license_key = var.new_relic_license_key
   gateway_chart = abspath("${path.module}/../charts/gateway")
   superheroes_chart = abspath("${path.module}/../charts/superheroes")
+  customers_chart = abspath("${path.module}/../charts/customers")
+  mysql_chart = abspath("${path.module}/../charts/mysql")
 }
