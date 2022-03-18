@@ -47,7 +47,8 @@ func getCustomer(db *sql.DB) (getCustomer func(c *gin.Context)) {
 
 		var customer Customer
 
-		err = stmtOut.QueryRow(id).Scan(&customer.Id, &customer.Contact.FirstName, &customer.Contact.LastName, &customer.Contact.Email, &customer.Contact.Title, &customer.Company.Name, &customer.Company.Address.Street, &customer.Company.Address.City, &customer.Company.Address.State, &customer.Company.Address.PostalCode, &customer.ApiVersion)
+		ctx := NewRelicMysqlCtx(c)
+		err = stmtOut.QueryRowContext(ctx, id).Scan(&customer.Id, &customer.Contact.FirstName, &customer.Contact.LastName, &customer.Contact.Email, &customer.Contact.Title, &customer.Company.Name, &customer.Company.Address.Street, &customer.Company.Address.City, &customer.Company.Address.State, &customer.Company.Address.PostalCode, &customer.ApiVersion)
 		if err != nil {
 			if err == sql.ErrNoRows {
 				c.JSON(404, gin.H{
@@ -81,7 +82,8 @@ func token(db *sql.DB) (token func(c *gin.Context)) {
 
 		var customer Customer
 
-		err = stmtOut.QueryRow().Scan(&customer.Id, &customer.Contact.FirstName, &customer.Contact.LastName, &customer.Contact.Email, &customer.Contact.Title, &customer.Company.Name, &customer.Company.Address.Street, &customer.Company.Address.City, &customer.Company.Address.State, &customer.Company.Address.PostalCode, &customer.ApiVersion)
+		ctx := NewRelicMysqlCtx(c)
+		err = stmtOut.QueryRowContext(ctx).Scan(&customer.Id, &customer.Contact.FirstName, &customer.Contact.LastName, &customer.Contact.Email, &customer.Contact.Title, &customer.Company.Name, &customer.Company.Address.Street, &customer.Company.Address.City, &customer.Company.Address.State, &customer.Company.Address.PostalCode, &customer.ApiVersion)
 		if err != nil {
 			c.JSON(500, gin.H{
 				"message": err.Error(),
@@ -102,7 +104,7 @@ func token(db *sql.DB) (token func(c *gin.Context)) {
 		}
 		defer stmtIns.Close()
 
-		_, err = stmtIns.Exec(token.String(), &customer.Id)
+		_, err = stmtIns.ExecContext(ctx, token.String(), &customer.Id)
 		if err != nil {
 			c.JSON(500, gin.H{
 				"message": err.Error(),
@@ -142,7 +144,8 @@ func authorize(db *sql.DB) (authorize func(c *gin.Context)) {
 
 		var validCustomerId string
 
-		err = stmtOut.QueryRow(payload.Token).Scan(&validCustomerId)
+		ctx := NewRelicMysqlCtx(c)
+		err = stmtOut.QueryRowContext(ctx, payload.Token).Scan(&validCustomerId)
 		if err != nil {
 			if err == sql.ErrNoRows {
 				c.JSON(403, gin.H{

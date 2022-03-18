@@ -8,4 +8,5 @@ require (
 	github.com/google/uuid v1.3.0 // indirect
 	github.com/newrelic/go-agent/v3 v3.15.2 // indirect
 	github.com/newrelic/go-agent/v3/integrations/nrgin v1.1.2 // indirect
+	github.com/newrelic/go-agent/v3/integrations/nrmysql v1.2.1 // indirect
 )

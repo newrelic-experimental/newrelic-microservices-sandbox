@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"database/sql"
 	"fmt"
 	"log"
@@ -8,10 +9,12 @@ import (
 	"time"
 
 	"github.com/gin-gonic/gin"
-	_ "github.com/go-sql-driver/mysql"
 	nrgin "github.com/newrelic/go-agent/v3/integrations/nrgin"
+	_ "github.com/newrelic/go-agent/v3/integrations/nrmysql"
 	"github.com/newrelic/go-agent/v3/newrelic"
 )
+
+const NrMysqlCtxKey = "NEW_RELIC_MYSQL_CONTEXT"
 
 func getEnv(name string, defaultValue string) string {
 	value, exists := os.LookupEnv(name)
@@ -20,6 +23,13 @@ func getEnv(name string, defaultValue string) string {
 	} else {
 		return defaultValue
 	}
+}
+
+//Create and return the New Relic Mysql Context
+func NewRelicMysqlCtx(c *gin.Context) context.Context {
+	txn := newrelic.FromContext(c.Request.Context())
+	ctx := newrelic.NewContext(c.Request.Context(), txn)
+	return ctx
 }
 
 func main() {
@@ -40,6 +50,7 @@ func main() {
 		newrelic.ConfigAppName("Customers Service"),
 		newrelic.ConfigLicense(os.Getenv("NEW_RELIC_LICENSE_KEY")),
 		newrelic.ConfigDebugLogger(os.Stdout),
+		newrelic.ConfigDistributedTracerEnabled(true),
 	)
 	if nil != err {
 		log.Print(err)
@@ -48,7 +59,7 @@ func main() {
 	// db := sql.OpenDB(connector)
 	connStr := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s", getEnv("MYSQL_USERNAME", "root"), getEnv("MYSQL_PASSWORD", "password"), getEnv("MYSQL_HOST", "localhost"), getEnv("MYSQL_PORT", "3306"), getEnv("MYSQL_DATABASE", "customers"))
 	log.Print(fmt.Sprintf("Connecting to %s", connStr))
-	db, err := sql.Open("mysql", connStr)
+	db, err := sql.Open("nrmysql", connStr)
 	if err != nil {
 		panic(err)
 	}
@@ -66,6 +77,12 @@ func main() {
 	//log.Print("Connected to database")
 
 	router := gin.Default()
+
+	// By default gin.DefaultWriter = os.Stdout
+	router.Use(gin.Logger())
+
+	// Recovery middleware recovers from any panics and writes a 500 if there was one.
+	router.Use(gin.Recovery())
 
 	router.Use(nrgin.Middleware(app))
 
