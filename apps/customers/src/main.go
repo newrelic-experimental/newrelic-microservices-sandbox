@@ -28,7 +28,7 @@ func getEnv(name string, defaultValue string) string {
 //Create and return the New Relic Mysql Context
 func NewRelicMysqlCtx(c *gin.Context) context.Context {
 	txn := newrelic.FromContext(c.Request.Context())
-	ctx := newrelic.NewContext(c.Request.Context(), txn)
+	ctx := newrelic.NewContext(context.Background(), txn)
 	return ctx
 }
 
@@ -77,14 +77,13 @@ func main() {
 	//log.Print("Connected to database")
 
 	router := gin.Default()
+	router.Use(nrgin.Middleware(app))
 
 	// By default gin.DefaultWriter = os.Stdout
 	router.Use(gin.Logger())
 
 	// Recovery middleware recovers from any panics and writes a 500 if there was one.
 	router.Use(gin.Recovery())
-
-	router.Use(nrgin.Middleware(app))
 
 	router.GET("/ping", func(c *gin.Context) {
 		c.JSON(200, gin.H{
