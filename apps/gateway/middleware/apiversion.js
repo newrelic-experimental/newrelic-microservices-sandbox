@@ -1,3 +1,4 @@
+const newrelic = require('newrelic');
 module.exports = function createApiVersionMiddleware(headerName) {
   
   const HEADERNAME = (headerName || 'X-Api-Version').toLowerCase();
@@ -12,6 +13,7 @@ module.exports = function createApiVersionMiddleware(headerName) {
       ctx.log.info(`No header named ${HEADERNAME} found.  Defaulting to v1`);
       version = "v1";
     }
+    newrelic.addCustomAttribute("apiVersion", version);
     ctx.state.apiVersion = version;
     
     return next();
