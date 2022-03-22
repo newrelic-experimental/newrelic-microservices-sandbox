@@ -27,7 +27,7 @@ func getEnv(name string, defaultValue string) string {
 
 //Create and return the New Relic Mysql Context
 func NewRelicMysqlCtx(c *gin.Context) context.Context {
-	txn := newrelic.FromContext(c.Request.Context())
+	txn := nrgin.Transaction(c)
 	ctx := newrelic.NewContext(context.Background(), txn)
 	return ctx
 }
