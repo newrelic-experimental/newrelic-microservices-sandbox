@@ -6,6 +6,10 @@ replicaCount: 1
 
 container:
   httpPort: 3000
+  
+  # setting to false will allow you to hit the api directly without using
+  # an authentication token & header
+  authEnabled: true
 
 new_relic:
   license_key:

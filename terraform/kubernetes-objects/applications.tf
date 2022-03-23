@@ -94,3 +94,60 @@ resource "helm_release" "mysql" {
   recreate_pods = true
   
 }
+
+resource "kubernetes_config_map" "locustfile" {
+  metadata {
+    name = "locustfile"
+  }
+
+  data = {
+    "locustfile.py" = "${file("${path.module}/../../apps/loadgen/locustfile.py")}"
+  }
+
+}
+
+resource "helm_release" "loadgen" {
+
+  depends_on = [data.kubernetes_service.ingress_nginx_controller, kubernetes_config_map.locustfile, helm_release.gateway, helm_release.customers]
+  
+  wait       = true
+  timeout    = 600
+
+  name       = "loadgen"
+  repository = "https://charts.deliveryhero.io/"
+  chart      = "locust"
+  
+  recreate_pods = true
+  
+  set {
+    name = "loadtest.headless"
+    value = kubernetes_config_map.locustfile.metadata[0].name
+  }
+  
+  set {
+    name = "loadtest.locust_locustfile_configmap"
+    value = kubernetes_config_map.locustfile.metadata[0].name
+  }
+  
+  set {
+    name = "loadtest.locust_locustfile"
+    value = "locustfile.py"
+  }
+  
+  set {
+    name = "loadtest.locust_host"
+    value = "http://${data.kubernetes_service.ingress_nginx_controller.status.0.load_balancer.0.ingress.0.hostname}"
+  }
+  
+  # set {
+  #   name = "master.args"
+  #   value = "--users 10"
+  # }
+  
+  values = [<<EOF
+master.args:
+  - "--users"
+  - "10"
+EOF
+  ]
+}

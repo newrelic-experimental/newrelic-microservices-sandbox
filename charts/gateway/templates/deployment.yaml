@@ -41,6 +41,8 @@ spec:
                   key: {{ .Values.new_relic.license_key.key }}
             - name: HTTP_PORT
               value: "{{ .Values.container.httpPort }}"
+            - name: AUTH_ENABLED
+              value: "{{ .Values.container.authEnabled }}"
           ports:
             - name: http
               containerPort: {{ .Values.container.httpPort }}
