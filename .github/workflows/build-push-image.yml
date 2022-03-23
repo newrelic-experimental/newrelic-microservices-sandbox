@@ -38,7 +38,7 @@ jobs:
         name: get the SSH version of the git repository
         uses: ASzc/change-string-case-action@v2
         with:
-          string: ${{ format('git@github.com:{0}.git, github.repository) }}
+          string: ${{ format('git@github.com:{0}.git', github.repository) }}
 
       - name: Build and push Docker image
         uses: docker/build-push-action@v2
