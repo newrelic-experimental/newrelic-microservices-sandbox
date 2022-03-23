@@ -33,6 +33,12 @@ jobs:
         uses: docker/metadata-action@v3
         with:
           images: ghcr.io/${{ github.repository }}/${{ inputs.image_name }}
+      
+      - id: sshrepo
+        name: get the SSH version of the git repository
+        uses: ASzc/change-string-case-action@v2
+        with:
+          string: ${{ format('git@github.com:{0}.git, github.repository) }}
 
       - name: Build and push Docker image
         uses: docker/build-push-action@v2
@@ -42,6 +48,6 @@ jobs:
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
           build-args: |
-            REPOSITORY_URL=${{ github.repositoryUrl }}
+            REPOSITORY_URL=${{ steps.sshrepo.outputs.lower }}
             COMMIT_SHA=${{ github.sha }}
             RELEASE_TAG=${{ github.ref }}
