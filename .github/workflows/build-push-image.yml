@@ -48,6 +48,6 @@ jobs:
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
           build-args: |
-            REPOSITORY_URL=${{ steps.sshrepo.outputs.lower }}
+            REPOSITORY_URL=${{ steps.sshrepo.outputs.lowercase }}
             COMMIT_SHA=${{ github.sha }}
             RELEASE_TAG=${{ github.ref }}
