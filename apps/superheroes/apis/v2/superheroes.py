@@ -146,8 +146,8 @@ class CompareSuperheroes(Resource):
     def get(self):
         """Compare two superheroes by one of their powerstats fields"""
         args = comparison_parser.parse_args()
-        sh1 = db.get(Superheroes.slug == args["superhero1"])
-        sh2 = db.get(Superheroes.slug == args["superhero2"])
+        sh1 = db.get(Superheroes.id == int(args["superhero1"]))
+        sh2 = db.get(Superheroes.id == int(args["superhero2"]))
         first = None
         second = None
         if (sh1["powerstats"][args["comparator"]] >= sh2["powerstats"][args["comparator"]]):

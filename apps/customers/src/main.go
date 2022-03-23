@@ -32,6 +32,14 @@ func NewRelicMysqlCtx(c *gin.Context) context.Context {
 	return ctx
 }
 
+//middleware to set the api version
+func ApiVersionAttribute(version string) (apiVersionAttribute func(c *gin.Context)) {
+	return func(c *gin.Context) {
+		txn := nrgin.Transaction(c)
+		txn.AddAttribute("apiVersion", version)
+	}
+}
+
 func main() {
 
 	// mysqlConfig := mysql.NewConfig()
@@ -79,23 +87,27 @@ func main() {
 	router := gin.Default()
 	router.Use(nrgin.Middleware(app))
 
-	// By default gin.DefaultWriter = os.Stdout
-	router.Use(gin.Logger())
-
-	// Recovery middleware recovers from any panics and writes a 500 if there was one.
-	router.Use(gin.Recovery())
-
 	router.GET("/ping", func(c *gin.Context) {
 		c.JSON(200, gin.H{
 			"message": "pong",
 		})
 	})
 
-	router.GET("/customers/:id", getCustomer(db))
+	v1 := router.Group("/v1")
+	{
+		v1.Use(ApiVersionAttribute("v1"))
+		v1.GET("/customers/:id", getCustomer(db))
+		v1.POST("/customers/token", token(db))
+		v1.POST("/customers/authorize", authorize(db))
+	}
 
-	router.POST("/customers/token", token(db))
-
-	router.POST("/customers/authorize", authorize(db))
+	v2 := router.Group("/v2")
+	{
+		v2.Use(ApiVersionAttribute("v2"))
+		v2.GET("/customers/:id", getCustomer(db))
+		v2.POST("/customers/token", token(db))
+		v2.POST("/customers/authorize", authorize(db))
+	}
 
 	router.Run() // listen and serve on 0.0.0.0:8080 (for windows "localhost:8080")
 }

@@ -134,7 +134,7 @@ func authorize(db *sql.DB) (authorize func(c *gin.Context)) {
 			return
 		}
 
-		stmtOut, err := db.Prepare("SELECT customer_id FROM tokens WHERE token = ?")
+		stmtOut, err := db.Prepare("SELECT customers.id, customers.company_name FROM customers, tokens WHERE customers.id = tokens.customer_id and tokens.token = ?")
 		if err != nil {
 			c.JSON(500, gin.H{
 				"message": err.Error(),
@@ -143,9 +143,10 @@ func authorize(db *sql.DB) (authorize func(c *gin.Context)) {
 		defer stmtOut.Close()
 
 		var validCustomerId string
+		var validCustomerName string
 
 		ctx := NewRelicMysqlCtx(c)
-		err = stmtOut.QueryRowContext(ctx, payload.Token).Scan(&validCustomerId)
+		err = stmtOut.QueryRowContext(ctx, payload.Token).Scan(&validCustomerId, &validCustomerName)
 		if err != nil {
 			if err == sql.ErrNoRows {
 				c.JSON(403, gin.H{
@@ -159,7 +160,7 @@ func authorize(db *sql.DB) (authorize func(c *gin.Context)) {
 			return
 		}
 
-		c.JSON(200, gin.H{"customerId": validCustomerId})
+		c.JSON(200, gin.H{"customerId": validCustomerId, "customerName": validCustomerName})
 
 	}
 
