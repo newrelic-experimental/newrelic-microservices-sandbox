@@ -1,5 +1,7 @@
 import logging
 import random
+import re
+import sys
 
 from flask_restx import Namespace, Resource, errors, fields, reqparse
 
@@ -144,39 +146,44 @@ class CompareSuperheroes(Resource):
     @api.expect(comparison_parser)
     @api.marshal_with(comparison_model, skip_none=True)
     def get(self):
-        """Compare two superheroes by one of their powerstats fields"""
-        args = comparison_parser.parse_args()
-        sh1 = db.get(Superheroes.id == int(args["superhero1"]))
-        sh2 = db.get(Superheroes.id == int(args["superhero2"]))
-        first = None
-        second = None
-        if (sh1["powerstats"][args["comparator"]] >= sh2["powerstats"][args["comparator"]]):
-            first = sh1
-            second = sh2
-        else:
-            first = sh2
-            second = sh1
-        result = {
-            "comparator": args["comparator"],
-            "difference": first["powerstats"][args["comparator"]] - second["powerstats"][args["comparator"]],
-            "order": [
-                {
-                    "id": first["id"],
-                    "name": first["name"],
-                    "slug": first["slug"],
-                    "powerstats": {
-                        args["comparator"]: first["powerstats"][args["comparator"]]
-                    }
-                },
-                {
-                    "id": second["id"],
-                    "name": second["name"],
-                    "slug": second["slug"],
-                    "powerstats": {
-                        args["comparator"]: second["powerstats"][args["comparator"]]
-                    }
-                },
-            ]
-        }
-
-        return result
+        try:
+            """Compare two superheroes by one of their powerstats fields"""
+            args = comparison_parser.parse_args()
+            superhero1 = db.get(Superheroes.id == int(args["superhero1"]))
+            superhero2 = db.get(Superheroes.id == int(args["superhero2"]))
+            first = None
+            second = None
+            if (superhero1["powerstats"][args["comparator"]] >= superhero2["powerstats"][args["comparator"]]):
+                first = superhero1
+                second = superhero2
+            else:
+                first = superhero2
+                second = superhero1
+            result = {
+                "comparator": args["comparator"],
+                "difference": first["powerstats"][args["comparator"]] - second["powerstats"][args["comparator"]],
+                "order": [
+                    {
+                        "id": first["id"],
+                        "name": first["name"],
+                        "slug": first["slug"],
+                        "powerstats": {
+                            args["comparator"]: first["powerstats"][args["comparator"]]
+                        }
+                    },
+                    {
+                        "id": second["id"],
+                        "name": second["name"],
+                        "slug": second["slug"],
+                        "powerstats": {
+                            args["comparator"]: second["powerstats"][args["comparator"]]
+                        }
+                    },
+                ]
+            }
+    
+            return result
+        except ValueError:
+            info = sys.exc_info()
+            newmsg = re.sub(r": '.+'$", "", str(info[1]))
+            raise ValueError(newmsg).with_traceback(info[2])
