@@ -181,7 +181,7 @@ class CompareSuperheroes(Resource):
                     },
                 ]
             }
-    
+
             return result
         except ValueError:
             info = sys.exc_info()
