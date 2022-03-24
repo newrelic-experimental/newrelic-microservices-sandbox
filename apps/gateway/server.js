@@ -3,8 +3,9 @@ require('@newrelic/koa');
 const Koa = require('koa');
 const Router = require('@koa/router');
 const pino = require('pino');
+const nrPino = require('@newrelic/pino-enricher');
 const logger = require('koa-pino-logger')({
-  logger: pino(),
+  logger: pino(nrPino()),
   serializers: {
     req: (req) => {
       const { headers, ...rest } = req;

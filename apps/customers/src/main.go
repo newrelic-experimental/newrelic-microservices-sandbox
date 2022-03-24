@@ -4,14 +4,16 @@ import (
 	"context"
 	"database/sql"
 	"fmt"
-	"log"
 	"os"
 	"time"
 
 	"github.com/gin-gonic/gin"
+	"github.com/newrelic/go-agent/v3/integrations/logcontext/nrlogrusplugin"
 	nrgin "github.com/newrelic/go-agent/v3/integrations/nrgin"
 	_ "github.com/newrelic/go-agent/v3/integrations/nrmysql"
 	"github.com/newrelic/go-agent/v3/newrelic"
+	logrus "github.com/sirupsen/logrus"
+	"github.com/toorop/gin-logrus"
 )
 
 const NrMysqlCtxKey = "NEW_RELIC_MYSQL_CONTEXT"
@@ -41,6 +43,8 @@ func ApiVersionAttribute(version string) (apiVersionAttribute func(c *gin.Contex
 }
 
 func main() {
+	log := logrus.New()
+	log.SetFormatter(nrlogrusplugin.ContextFormatter{})
 
 	// mysqlConfig := mysql.NewConfig()
 	// mysqlConfig.User = getEnv("MYSQL_USERNAME", "root")
@@ -84,8 +88,8 @@ func main() {
 
 	//log.Print("Connected to database")
 
-	router := gin.Default()
-	router.Use(nrgin.Middleware(app))
+	router := gin.New()
+	router.Use(ginlogrus.Logger(log), gin.Recovery(), nrgin.Middleware(app))
 
 	router.GET("/ping", func(c *gin.Context) {
 		c.JSON(200, gin.H{
