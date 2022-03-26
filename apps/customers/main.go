@@ -8,6 +8,11 @@ import (
 	"os"
 	"time"
 
+	swaggerfiles "github.com/swaggo/files"
+	ginSwagger "github.com/swaggo/gin-swagger"
+
+	_ "newrelic-microservices-sandbox/customers/docs"
+
 	"github.com/gin-gonic/gin"
 	nrgin "github.com/newrelic/go-agent/v3/integrations/nrgin"
 	_ "github.com/newrelic/go-agent/v3/integrations/nrmysql"
@@ -40,19 +45,11 @@ func ApiVersionAttribute(version string) (apiVersionAttribute func(c *gin.Contex
 	}
 }
 
+// @title           Customers API
+// @version         2.0
+// @description     endpoints for working with customers and authentication
+
 func main() {
-
-	// mysqlConfig := mysql.NewConfig()
-	// mysqlConfig.User = getEnv("MYSQL_USERNAME", "root")
-	// mysqlConfig.Passwd = getEnv("MYSQL_PASSWORD", "password")
-	// mysqlConfig.Net = "tcp"
-	// mysqlConfig.Addr = fmt.Sprintf("%s:%s", getEnv("MYSQL_HOST", "localhost"), getEnv("MYSQL_PORT", "3306"))
-	// mysqlConfig.DBName = getEnv("MYSQL_DATABASE", "customers")
-
-	// connector, connectorErr := mysql.NewConnector(mysqlConfig)
-	// if connectorErr != nil {
-	// 	panic(connectorErr)
-	// }
 
 	app, err := newrelic.NewApplication(
 		newrelic.ConfigAppName("Customers Service"),
@@ -86,6 +83,7 @@ func main() {
 
 	router := gin.Default()
 	router.Use(nrgin.Middleware(app))
+	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerfiles.Handler))
 
 	router.GET("/ping", func(c *gin.Context) {
 		c.JSON(200, gin.H{

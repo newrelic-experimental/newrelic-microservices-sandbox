@@ -1,0 +1,24 @@
+swagger: '2.0'
+info:
+  version: "2.0.0"
+  title: "New Relic Microservices Sandbox"
+  description: A sample stack of microservices that help you kick the tires on Observability
+
+basePath: /api/v2
+
+securityDefinitions:
+  ApiKeyAuth: 
+    type: apiKey
+    in: header
+    name: X-Api-Key
+
+security:
+  - ApiKeyAuth: []
+
+paths:
+  /v2/customers/token:
+    post:
+      security: [] # remove security from the token url
+x-apis:
+    superheroes: http://${superheroes_host}:${superheroes_port}/v1/swagger.json
+    customers: http://${customers_host}:${customers_port}/swagger/doc.json
