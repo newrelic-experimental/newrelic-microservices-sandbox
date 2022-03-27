@@ -1,3 +1,6 @@
+.vscode
+newrelic_agent.log
+
 # Local .terraform directories
 **/.terraform/*
 

@@ -7,7 +7,7 @@ module.exports = function createAuthMiddleware(authEnabled, authorizeUrl) {
      return next();
    } else {
      const { default: fetch } = await import('node-fetch');
-     const body = {token: ctx.request.headers['x-superheroes-api-key']};
+     const body = {token: ctx.request.headers['x-api-key']};
      const response = await fetch(authorizeUrl, {
        method: 'POST', 
        body: JSON.stringify(body), 

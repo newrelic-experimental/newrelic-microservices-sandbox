@@ -33,6 +33,13 @@ type Customer struct {
 	ApiVersion string  `json:"apiVersion"`
 }
 
+// getCustomer godoc
+// @Summary      Get a customer by ID
+// @Tags         customers
+// @Produce      json
+// @Param        id   path      string  true  "Customer ID"
+// @Success      200  {object}  Customer
+// @Router       /customers/{id} [get]
 func getCustomer(db *sql.DB) (getCustomer func(c *gin.Context)) {
 
 	return func(c *gin.Context) {
@@ -67,6 +74,17 @@ func getCustomer(db *sql.DB) (getCustomer func(c *gin.Context)) {
 
 }
 
+type TokenResponse struct {
+	Token    string   `json:"token"`
+	Customer Customer `json:"customer"`
+}
+
+// token godoc
+// @Summary      Generate a token
+// @Tags		 auth
+// @Produce      json
+// @Success      200  {object}  TokenResponse
+// @Router       /customers/token [post]
 func token(db *sql.DB) (token func(c *gin.Context)) {
 
 	return func(c *gin.Context) {
@@ -111,11 +129,11 @@ func token(db *sql.DB) (token func(c *gin.Context)) {
 			})
 			return
 		}
-
-		c.JSON(200, gin.H{
-			"token":    token.String(),
-			"customer": &customer,
-		})
+		tr := TokenResponse{
+			Token:    token.String(),
+			Customer: customer,
+		}
+		c.JSON(200, tr)
 	}
 
 }
@@ -124,6 +142,18 @@ type Authorization struct {
 	Token string `json:"token" binding:"required"`
 }
 
+type AuthorizationResponse struct {
+	CustomerId   string `json:"customerId"`
+	CustomerName string `json:"customerName"`
+}
+
+// authorize godoc
+// @Summary      Authorize based on a token
+// @Tags		 auth
+// @Param   	 payload   body    Authorization    true  "api token"
+// @Produce      json
+// @Success      200  {object}  AuthorizationResponse "customer id and name"
+// @Router       /customers/authorize [post]
 func authorize(db *sql.DB) (authorize func(c *gin.Context)) {
 
 	return func(c *gin.Context) {
@@ -160,7 +190,11 @@ func authorize(db *sql.DB) (authorize func(c *gin.Context)) {
 			return
 		}
 
-		c.JSON(200, gin.H{"customerId": validCustomerId, "customerName": validCustomerName})
+		ar := AuthorizationResponse{
+			CustomerId:   validCustomerId,
+			CustomerName: validCustomerName,
+		}
+		c.JSON(200, ar)
 
 	}
 

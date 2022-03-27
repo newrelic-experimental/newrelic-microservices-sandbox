@@ -6,7 +6,7 @@ FROM golang:${GO_VERSION}-alpine AS builder
 
 RUN apk update && apk add alpine-sdk git && rm -rf /var/cache/apk/*
 
-RUN mkdir -p /var/src/app
+RUN mkdir -p /var/src/app/
 WORKDIR /var/src/app
 
 COPY go.mod .
@@ -14,8 +14,7 @@ COPY go.sum .
 RUN go mod download
 
 COPY . .
-RUN go build -o ./dist/service ./src/*
-
+RUN go build -o ./dist/service ./*.go
 FROM alpine:latest
 
 
@@ -26,7 +25,9 @@ RUN apk update && apk add ca-certificates && rm -rf /var/cache/apk/*
 
 RUN mkdir -p /var/run/customers
 WORKDIR /var/run/customers
+COPY --from=builder /var/src/app/docs ./docs
 COPY --from=builder /var/src/app/dist/service .
+
 
 
 ARG REPOSITORY_URL

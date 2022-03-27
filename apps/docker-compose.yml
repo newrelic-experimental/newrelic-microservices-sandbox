@@ -4,6 +4,9 @@ services:
     build: gateway
     ports:
       - "8080:3000"
+    depends_on:
+      - superheroes
+      - customers
     environment:
       HTTP_PORT: "3000"
       AUTH_ENABLED: "true"
