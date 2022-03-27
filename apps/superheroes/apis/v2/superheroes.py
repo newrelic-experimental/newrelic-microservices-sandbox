@@ -79,13 +79,15 @@ superhero_model = api.model(
 
 @api.route("/random")
 class RandomSuperheroes(Resource):
+    parser = reqparse.RequestParser()
+    parser.add_argument('num', type=int, default=1, help='The number of superheroes to return')
+    
     @api.doc("")
+    @api.expect(parser)
     @api.marshal_list_with(superhero_model)
     def get(self):
         """Fetch a random number of superheroes"""
-        parser = reqparse.RequestParser()
-        parser.add_argument('num', type=int, default=1, help='Invalid num')
-        args = parser.parse_args()
+        args = RandomSuperheroes.parser.parse_args()
         logging.info(f"fetching {args['num']} random superheroes")
         superheroes = random.sample(db.all(), args["num"])
         return superheroes

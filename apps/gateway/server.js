@@ -36,6 +36,8 @@ const authEnabled = (process.env.AUTH_ENABLED === "true") || false
 
 const app = new Koa();
 
+const router = new Router();
+
 //set up the swagger docs
 template = fs.readFileSync(`${__dirname}/swagger/aggregator.tpl.yml`)
 resolved = template.toString()
@@ -48,12 +50,20 @@ aggregator('swagger/aggregator.yml')
   .then(result => {
     fs.writeFileSync('swagger/api.json', JSON.stringify(result));
     const spec = JSON.parse(fs.readFileSync(`${__dirname}/swagger/api.json`));
-    app.use(KoaSwagger.koaSwagger({ swaggerOptions: { spec }}));
+    app.use( 
+      KoaSwagger.koaSwagger({
+        routePrefix: "/docs",
+        specPrefix: "/docs/swagger.json",
+        swaggerOptions: {
+          url: "/docs/swagger.json",
+          spec,
+        },
+        hideTopbar: false,
+        exposeSpec: true }));
   });
 
-
-const router = new Router();
-
+router.redirect("/", "/docs");
+ 
 router.get('/ping', (ctx, next) => {
   ctx.body = {
     message: "healthy"
@@ -63,7 +73,7 @@ router.get('/ping', (ctx, next) => {
 router.use('/api/:version/(.*)', apiversion);
 
 const authUrl = `${customers_protocol}://${customers_host}:${customers_port}/v2/customers/authorize`
-router.all('/api/(.*)', auth(authEnabled, authUrl), proxy({
+router.all('apiProxy', '/api/(.*)', auth(authEnabled, authUrl), proxy({
   '/api/(.*)/superheroes(.*)': `${superheroes_protocol}://${superheroes_host}:${superheroes_port}/$1/superheroes$2`,
   '/api/(.*)/customers(.*)': `${customers_protocol}://${customers_host}:${customers_port}/$1/customers$2`
 }));
