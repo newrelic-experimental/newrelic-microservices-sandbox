@@ -35,6 +35,7 @@ type Customer struct {
 
 // getCustomer godoc
 // @Summary      Get a customer by ID
+// @Tags         customers
 // @Produce      json
 // @Param        id   path      string  true  "Customer ID"
 // @Success      200  {object}  Customer
@@ -80,6 +81,7 @@ type TokenResponse struct {
 
 // token godoc
 // @Summary      Generate a token
+// @Tags		 auth
 // @Produce      json
 // @Success      200  {object}  TokenResponse
 // @Router       /customers/token [post]
@@ -147,6 +149,7 @@ type AuthorizationResponse struct {
 
 // authorize godoc
 // @Summary      Authorize based on a token
+// @Tags		 auth
 // @Param   	 payload   body    Authorization    true  "api token"
 // @Produce      json
 // @Success      200  {object}  AuthorizationResponse "customer id and name"

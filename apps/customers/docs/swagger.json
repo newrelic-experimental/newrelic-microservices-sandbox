@@ -12,6 +12,9 @@
                 "produces": [
                     "application/json"
                 ],
+                "tags": [
+                    "auth"
+                ],
                 "summary": "Authorize based on a token",
                 "parameters": [
                     {
@@ -39,6 +42,9 @@
                 "produces": [
                     "application/json"
                 ],
+                "tags": [
+                    "auth"
+                ],
                 "summary": "Generate a token",
                 "responses": {
                     "200": {
@@ -54,6 +60,9 @@
             "get": {
                 "produces": [
                     "application/json"
+                ],
+                "tags": [
+                    "customers"
                 ],
                 "summary": "Get a customer by ID",
                 "parameters": [

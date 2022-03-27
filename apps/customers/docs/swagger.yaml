@@ -82,6 +82,8 @@ paths:
           schema:
             $ref: '#/definitions/main.Customer'
       summary: Get a customer by ID
+      tags:
+      - customers
   /customers/authorize:
     post:
       parameters:
@@ -99,6 +101,8 @@ paths:
           schema:
             $ref: '#/definitions/main.AuthorizationResponse'
       summary: Authorize based on a token
+      tags:
+      - auth
   /customers/token:
     post:
       produces:
@@ -109,4 +113,6 @@ paths:
           schema:
             $ref: '#/definitions/main.TokenResponse'
       summary: Generate a token
+      tags:
+      - auth
 swagger: "2.0"

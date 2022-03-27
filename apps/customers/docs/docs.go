@@ -21,6 +21,9 @@ const docTemplate = `{
                 "produces": [
                     "application/json"
                 ],
+                "tags": [
+                    "auth"
+                ],
                 "summary": "Authorize based on a token",
                 "parameters": [
                     {
@@ -48,6 +51,9 @@ const docTemplate = `{
                 "produces": [
                     "application/json"
                 ],
+                "tags": [
+                    "auth"
+                ],
                 "summary": "Generate a token",
                 "responses": {
                     "200": {
@@ -63,6 +69,9 @@ const docTemplate = `{
             "get": {
                 "produces": [
                     "application/json"
+                ],
+                "tags": [
+                    "customers"
                 ],
                 "summary": "Get a customer by ID",
                 "parameters": [
