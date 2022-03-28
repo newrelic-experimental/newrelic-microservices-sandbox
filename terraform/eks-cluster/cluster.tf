@@ -22,8 +22,8 @@ resource "aws_eks_node_group" "nr_sandbox" {
   subnet_ids      = aws_subnet.nr_sandbox.*.id
 
   scaling_config {
-    desired_size = 3
-    max_size     = 3
+    desired_size = 4
+    max_size     = 4
     min_size     = 2
   }
 
