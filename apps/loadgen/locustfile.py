@@ -35,6 +35,6 @@ class SuperHeroesUser(HttpUser):
         body = tokenResponse.json()
         self.customer = body['customer']
         self.token = body['token']
-        self.client.headers['X-Superheroes-Api-Key'] = self.token
+        self.client.headers['X-Api-Key'] = self.token
         apiClientVersion = "2.0" if (self.customer['apiVersion'] == 'v2') else "1.0"
         self.client.headers['User-Agent'] = f"SuperHeroes-ApiClient/{apiClientVersion}"
