@@ -160,7 +160,7 @@ func authorize(db *sql.DB) (authorize func(c *gin.Context)) {
 
 		var payload Authorization
 		if err := c.ShouldBindJSON(&payload); err != nil {
-			c.JSON(400, gin.H{"message": "Bad Request"})
+			c.JSON(400, gin.H{"message": "Bad Request. Could not marshal JSON Payload"})
 			return
 		}
 
