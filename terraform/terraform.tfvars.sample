@@ -1,0 +1,11 @@
+# This name must be unique within your AWS and new relic accounts.
+# uncomment and edit to customizer
+# cluster_name = "newrelic-microservices-sandbox"
+
+# will be added as a tag to all resources
+# owner = <your username, etc.>
+
+# uncomment and add you new relic license key.
+# alternatively, can be specificed as a terraform variable
+# new_relic_license_key = <your nr license key>
+
