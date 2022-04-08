@@ -41,6 +41,10 @@ spec:
                   key: {{ .Values.new_relic.license_key.key }}
             - name: HTTP_PORT
               value: "{{ .Values.container.httpPort }}"
+            - name: NEW_RELIC_ANALYTICS_EVENTS_MAX_SAMPLES_STORED
+              value: "3600"
+            - name: NEW_RELIC_ERROR_COLLECTOR_MAX_EVENT_SAMPLES_STORED
+              value: "300"
           ports:
             - name: http
               containerPort: {{ .Values.container.httpPort }}

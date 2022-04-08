@@ -144,7 +144,7 @@ resource "helm_release" "loadgen" {
   #   value = "--users 10"
   # }
   
-  values = [ yamlencode({ "master": { "args": ["--users", "300"] }}) ]
+  values = [ yamlencode({ "master": { "args": ["--users", "100"] }}) ]
   
 }
   
