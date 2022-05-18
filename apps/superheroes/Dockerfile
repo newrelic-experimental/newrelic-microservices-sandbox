@@ -7,14 +7,14 @@ RUN apt-get update \
     && apt-get install curl -y \
     && rm -rf /var/lib/apt/lists/*
 
-RUN mkdir /app
-WORKDIR /app
+RUN mkdir /superheroes
+WORKDIR /superheroes
 
 # We copy just the requirements.txt first to leverage Docker cache
-COPY requirements.txt /app
+COPY requirements.txt /superheroes
 RUN pip install -r requirements.txt
 
-COPY . /app
+COPY . /superheroes
 
 ARG REPOSITORY_URL
 ARG COMMIT_SHA
@@ -28,4 +28,4 @@ ENV NEW_RELIC_METADATA_RELEASE_TAG=$RELEASE_TAG
 
 #WORKDIR /docker_app
 EXPOSE 8080
-ENTRYPOINT ["/app/bootstrap.sh"]
+ENTRYPOINT ["/superheroes/bootstrap.sh"]
