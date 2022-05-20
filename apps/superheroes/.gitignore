@@ -1,0 +1,16 @@
+**/.vscode
+**/coverage
+**/.env
+**/.aws
+**/.ssh
+**/.DS_Store
+**/venv
+**/.venv
+**/env
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# C extensions
+*.so

@@ -1,0 +1,118 @@
+definitions:
+  main.Address:
+    properties:
+      city:
+        type: string
+      postalCode:
+        type: string
+      state:
+        type: string
+      street:
+        type: string
+    type: object
+  main.Authorization:
+    properties:
+      token:
+        type: string
+    required:
+    - token
+    type: object
+  main.AuthorizationResponse:
+    properties:
+      customerId:
+        type: string
+      customerName:
+        type: string
+    type: object
+  main.Company:
+    properties:
+      address:
+        $ref: '#/definitions/main.Address'
+      name:
+        type: string
+    type: object
+  main.Contact:
+    properties:
+      email:
+        type: string
+      firstName:
+        type: string
+      lastName:
+        type: string
+      title:
+        type: string
+    type: object
+  main.Customer:
+    properties:
+      apiVersion:
+        type: string
+      company:
+        $ref: '#/definitions/main.Company'
+      contact:
+        $ref: '#/definitions/main.Contact'
+      id:
+        type: string
+    type: object
+  main.TokenResponse:
+    properties:
+      customer:
+        $ref: '#/definitions/main.Customer'
+      token:
+        type: string
+    type: object
+info:
+  contact: {}
+  description: endpoints for working with customers and authentication
+  title: Customers API
+  version: "2.0"
+paths:
+  /customers/{id}:
+    get:
+      parameters:
+      - description: Customer ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/main.Customer'
+      summary: Get a customer by ID
+      tags:
+      - customers
+  /customers/authorize:
+    post:
+      parameters:
+      - description: api token
+        in: body
+        name: payload
+        required: true
+        schema:
+          $ref: '#/definitions/main.Authorization'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: customer id and name
+          schema:
+            $ref: '#/definitions/main.AuthorizationResponse'
+      summary: Authorize based on a token
+      tags:
+      - auth
+  /customers/token:
+    post:
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/main.TokenResponse'
+      summary: Generate a token
+      tags:
+      - auth
+swagger: "2.0"
