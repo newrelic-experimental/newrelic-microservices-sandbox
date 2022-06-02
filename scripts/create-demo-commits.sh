@@ -2,11 +2,11 @@
 
 set -e
 
-COMMIT_1_DATE=$(date --date="7 day ago" --iso-8601)
+COMMIT_1_DATE=$(date --date="7 day ago" -u +"%Y-%m-%dT%H:%M:%SZ")
 COMMIT_1_NAME=${INPUT_USER1_NAME:-"User One"}
 COMMIT_1_EMAIL=${INPUT_USER1_EMAIL:-"userone@example.com"}
 
-COMMIT_2_DATE=$(date --date="3 day ago" --iso-8601)
+COMMIT_2_DATE=$(date --date="3 day ago" -u +"%Y-%m-%dT%H:%M:%SZ")
 COMMIT_2_NAME=${INPUT_USER2_NAME:-"User Two"}
 COMMIT_2_EMAIL=${INPUT_USER2_EMAIL:-"usertwo@example.com"}
 
