@@ -37,6 +37,7 @@ jobs:
       - name: Create Commits
         run: |
           ./scripts/create-demo-commits.sh
+        shell: bash
       - name: Push Branch
         run: |
           git push -f origin ${{ github.event.inputs.branchname }} 
