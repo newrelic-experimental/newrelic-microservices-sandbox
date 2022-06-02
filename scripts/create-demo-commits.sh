@@ -2,6 +2,8 @@
 
 set -e
 
+git fetch main
+
 COMMIT_1_DATE=$(date --date="7 day ago" -u +"%Y-%m-%dT%H:%M:%SZ")
 COMMIT_1_NAME=${INPUT_USER1_NAME:-"User One"}
 COMMIT_1_EMAIL=${INPUT_USER1_EMAIL:-"userone@example.com"}
