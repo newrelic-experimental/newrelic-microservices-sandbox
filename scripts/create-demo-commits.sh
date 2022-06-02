@@ -2,7 +2,7 @@
 
 set -e
 
-git fetch main
+git fetch origin main
 
 COMMIT_1_DATE=$(date --date="7 day ago" -u +"%Y-%m-%dT%H:%M:%SZ")
 COMMIT_1_NAME=${INPUT_USER1_NAME:-"User One"}
