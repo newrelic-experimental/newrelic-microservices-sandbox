@@ -36,7 +36,7 @@ jobs:
           ref: backstage
       - name: Create Commits
         run: |
-          ./scripts/create-demo-commits.sh
+          bash -x ./scripts/create-demo-commits.sh
         shell: bash
       - name: Push Branch
         run: |
