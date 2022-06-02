@@ -1,0 +1,43 @@
+name: prepare demo
+
+on:
+  workflow_dispatch:
+    inputs:
+      branchname:
+        required: true
+        type: string
+        description: "Name of the branch that will contain the modified history"
+        default: "demo"
+      user1_name:
+        required: true
+        type: string
+        description: "Name of the user who made the orginal changes."
+      user1_email:
+        required: true
+        type: string
+        description: "Email of the user who made the orginal changes."
+      user2_name:
+        required: true
+        type: string
+        description: "Name of the user who made the updated changes."
+      user2_email:
+        required: true
+        type: string
+        description: "Email of the user who made the updated changes."
+
+jobs:
+  prepare-branch:
+    name: Prepare Branch
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Checkout Backstage Branch
+        uses: actions/checkout@v3
+        with: 
+          ref: backstage
+      - name: Create Commits
+        run: |
+          ./scripts/create-demo-commits.sh
+      - name: Push Branch
+        run: |
+          git push -f origin ${{ github.event.inputs.branchname }} 
+
