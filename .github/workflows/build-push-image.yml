@@ -1,17 +1,29 @@
 name: Reusable Build and Push Docker image to github packages
 
 on:
-  workflow_call:
-    inputs:
-      image_name:
-        required: true
-        type: string
-      build_context:
-        required: true
-        type: string
+  push:
+    tags:
+      - 'v[0-9]+.[0-9]+.[0-9]+'
+    branches:
+      - 'demo*'
+
+  workflow_dispatch:
 
 jobs:
   build-and-push-image:
+    strategy:
+      fail-fast: true
+      matrix:
+        apps:
+          - image_name: gateway
+            build_context: ./apps/gateway
+          - image_name: customers
+            build_context: ./apps/customers
+          - image_name: superheroes
+            build_context: ./apps/superheroes
+          - image_name: mysql
+            build_context: ./apps/mysql
+
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -32,7 +44,7 @@ jobs:
         id: meta
         uses: docker/metadata-action@v3
         with:
-          images: ghcr.io/${{ github.repository }}/${{ inputs.image_name }}
+          images: ghcr.io/${{ github.repository }}/${{ matrix.apps.image_name }}
       
       - id: sshrepo
         name: get the SSH version of the git repository
@@ -43,7 +55,7 @@ jobs:
       - name: Build and push Docker image
         uses: docker/build-push-action@v2
         with:
-          context: ${{ inputs.build_context }}
+          context: ${{ matrix.apps.build_context }}
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
