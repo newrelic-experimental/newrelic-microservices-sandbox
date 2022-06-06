@@ -41,6 +41,7 @@ jobs:
           INPUT_USER2_NAME: ${{github.event.inputs.user2_name}}
           INPUT_USER2_EMAIL: ${{github.event.inputs.user2_email}}
           INPUT_BRANCHNAME: ${{github.event.inputs.branchname}}
+          SOURCE_REF: ${github.ref_name}
         run: |
           bash -x ./scripts/create-demo-commits.sh
         shell: bash

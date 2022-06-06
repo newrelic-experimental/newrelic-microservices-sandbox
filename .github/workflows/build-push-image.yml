@@ -1,4 +1,4 @@
-name: Reusable Build and Push Docker image to github packages
+name: Build and push docker images 
 
 on:
   push:
