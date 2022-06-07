@@ -23,12 +23,12 @@ export GIT_COMMITTER_NAME=$COMMIT_1_NAME
 export GIT_COMMITTER_EMAIL=$COMMIT_1_EMAIL
 export GIT_COMMITTER_DATE=$COMMIT_1_DATE
 git checkout -f --orphan $TARGET
-git restore --staged --source=origin/$REF .github/workflows/build-push-image.yml
-git restore --staged --source=origin/backstage apps
+git restore --staged --source=$REF .github/workflows/build-push-image.yml
+git restore --staged --source=backstage apps
 git commit -m "Working hard on v1 of our API!"
 
 
-git restore --staged --source=origin/main apps
+git restore --staged --source=$REF apps
 
 export GIT_AUTHOR_NAME=$COMMIT_2_NAME
 export GIT_AUTHOR_EMAIL=$COMMIT_2_EMAIL
