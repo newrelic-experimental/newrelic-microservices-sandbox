@@ -9,10 +9,24 @@
 # will be added as a tag to all resources
 # owner = "<your username, etc.>"
 
+###################################
 # new relic configuration variables
-# alternatively, can be specificed as terraform cli variables
+
 # new_relic_license_key = "<your nr license key>"
 # new_relic_user_api_key = "<your user api key>"
 # new_relic_account_id = "<your newrelic account id>"
 # new_relic_region = "<US or EU>" # defaults to US if you don't uncomment
+####################################
 
+
+###############################3
+# Image repository configuration
+
+# don't include a slash at the end
+# ex: ghcr.io/supercoder/newrelic-microservices-sandbox
+# image_repository_base = ghcr.io/<yourgithubusername>/<name of your fork>
+
+# you can set the tag for ALL of the apps with image_tag
+# or you can set tags for individual apps with <imagename>_tag
+# image_tag = "demo"
+# gateway_tag = "v1.0.0"
