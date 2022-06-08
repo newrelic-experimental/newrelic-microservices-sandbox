@@ -24,31 +24,25 @@ variable "new_relic_region" {
     default = "US"
 }
 
-variable "image_repository_base" {
-  type = string
-}
-
 variable "image_tag" {
   type = string
   default = null
 }
 
-variable "customers_tag" {
+variable "registry_server" {
   type = string
-  default = null
+  default = "ghcr.io"
 }
 
-variable "gateway_tag" {
+variable "github_username" {
   type = string
-  default = null
 }
 
-variable "mysql_tag" {
+variable "github_pat" {
   type = string
-  default = null
 }
 
-variable "superheroes_tag" {
+variable "repository_name" {
   type = string
-  default = null
+  default = "newrelic-microservices-sandbox"
 }

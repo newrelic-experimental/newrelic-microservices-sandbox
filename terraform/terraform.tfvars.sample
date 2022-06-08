@@ -22,11 +22,11 @@
 ###############################3
 # Image repository configuration
 
-# don't include a slash at the end
-# ex: ghcr.io/supercoder/newrelic-microservices-sandbox
-# image_repository_base = ghcr.io/<yourgithubusername>/<name of your fork>
+# registry_server = ghcr.io
+# github_username = "<your github username>"
+# repository_name = "<exact name of your fork>"
 
-# you can set the tag for ALL of the apps with image_tag
-# or you can set tags for individual apps with <imagename>_tag
-# image_tag = "demo"
-# gateway_tag = "v1.0.0"
+# github_pat = "<github personal access token>"
+
+# Set this to the branch or tag you built on github
+# image_tag = "v1.2.0"

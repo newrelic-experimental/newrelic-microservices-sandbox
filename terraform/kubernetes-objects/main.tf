@@ -1,5 +1,6 @@
 locals {
   new_relic_license_key_k8s_secret_key_name = "license_key"
+  image_repository_base = "${var.registry_server}/${var.github_username}/${var.repository_name}"
 }
 
 data "aws_eks_cluster" "default" {
