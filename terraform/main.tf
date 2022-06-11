@@ -24,9 +24,9 @@ module "kubernetes_objects" {
   mysql_chart = abspath("${path.module}/../charts/mysql")
   image_tag = var.image_tag
   registry_server = var.registry_server
-  github_username = var.github_username
-  github_pat = var.github_pat
-  repository_name = var.repository_name
+  registry_username = var.registry_username
+  registry_password = var.registry_password
+  repository_basepath = var.repository_basepath
 }
 
 module "newrelic" {

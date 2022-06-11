@@ -26,7 +26,6 @@ variable "new_relic_region" {
 
 variable "image_tag" {
   type = string
-  default = null
 }
 
 variable "registry_server" {
@@ -34,15 +33,16 @@ variable "registry_server" {
   default = "ghcr.io"
 }
 
-variable "github_username" {
+variable "registry_username" {
   type = string
+  default = null
 }
 
-variable "github_pat" {
+variable "registry_password" {
   type = string
+  default = null
 }
 
-variable "repository_name" {
+variable "repository_basepath" {
   type = string
-  default = "newrelic-microservices-sandbox"
 }

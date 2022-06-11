@@ -10,6 +10,9 @@ resource "kubernetes_secret" "newrelic_applications" {
 }
 
 resource "kubernetes_secret" "registry_auth" {
+
+  count = local.use_auth ? 1 : 0
+
   metadata {
     name = "docker-cfg"
   }
@@ -20,9 +23,9 @@ resource "kubernetes_secret" "registry_auth" {
     ".dockerconfigjson" = jsonencode({
       auths = {
         "${var.registry_server}" = {
-          "username" = var.github_username
-          "password" = var.github_pat
-          "auth"     = base64encode("${var.github_username}:${var.github_pat}")
+          "username" = var.registry_username
+          "password" = var.registry_password
+          "auth"     = base64encode("${var.registry_username}:${var.registry_password}")
         }
       }
     })
@@ -61,9 +64,12 @@ resource "helm_release" "gateway" {
     value = var.image_tag
   }
 
-  set {
-    name = "image.pullSecrets[0].name"
-    value = kubernetes_secret.registry_auth.metadata[0].name
+  dynamic set {
+    for_each = local.use_auth ? [1] : []
+    content {
+      name = "image.pullSecrets[0].name"
+      value = kubernetes_secret.registry_auth[0].metadata[0].name
+    }
   }
   
 }
@@ -100,9 +106,12 @@ resource "helm_release" "superheroes" {
     value = var.image_tag
   }
 
-  set {
-    name = "image.pullSecrets[0].name"
-    value = kubernetes_secret.registry_auth.metadata[0].name
+  dynamic set {
+    for_each = local.use_auth ? [1] : []
+    content {
+      name = "image.pullSecrets[0].name"
+      value = kubernetes_secret.registry_auth[0].metadata[0].name
+    }
   }
   
 }
@@ -139,9 +148,12 @@ resource "helm_release" "customers" {
     value = var.image_tag
   }
 
-  set {
-    name = "image.pullSecrets[0].name"
-    value = kubernetes_secret.registry_auth.metadata[0].name
+  dynamic set {
+    for_each = local.use_auth ? [1] : []
+    content {
+      name = "image.pullSecrets[0].name"
+      value = kubernetes_secret.registry_auth[0].metadata[0].name
+    }
   }
   
 }
@@ -168,9 +180,12 @@ resource "helm_release" "mysql" {
     value = var.image_tag
   }
 
-  set {
-    name = "image.pullSecrets[0].name"
-    value = kubernetes_secret.registry_auth.metadata[0].name
+  dynamic set {
+    for_each = local.use_auth ? [1] : []
+    content {
+      name = "image.pullSecrets[0].name"
+      value = kubernetes_secret.registry_auth[0].metadata[0].name
+    }
   }
   
 }

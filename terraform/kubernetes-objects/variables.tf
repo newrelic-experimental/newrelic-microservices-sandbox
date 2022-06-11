@@ -31,14 +31,16 @@ variable "registry_server" {
   type = string
 }
 
-variable "github_username" {
+variable "registry_username" {
   type = string
+  default = null
 }
 
-variable "github_pat" {
+variable "registry_password" {
   type = string
+  default = null
 }
 
-variable "repository_name" {
+variable "repository_basepath" {
   type = string
 }
