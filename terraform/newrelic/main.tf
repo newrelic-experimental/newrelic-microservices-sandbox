@@ -1,8 +1,3 @@
-provider "newrelic" {
-  account_id = var.new_relic_account_id
-  api_key = var.new_relic_user_api_key
-  region = var.new_relic_region                   # Valid regions are US and EU
-}
 
 locals {
   # Note: These must be an exact match to New Relic app names (Case sensitive).

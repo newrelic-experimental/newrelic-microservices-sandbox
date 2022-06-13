@@ -1,3 +1,20 @@
+terraform {
+  required_providers {
+    newrelic = {
+      source  = "newrelic/newrelic"
+      version = "~> 2.44" 
+    }
+    kubernetes = {
+      source = "hashicorp/kubernetes"
+      version = "2.4.1"
+    }
+    aws = {
+      source = "hashicorp/aws"
+      version = "4.2.0"
+    }
+  }
+}
+
 provider "aws" {
   
   default_tags {
@@ -8,6 +25,13 @@ provider "aws" {
     }
   }
 }
+
+provider "newrelic" {
+  account_id = var.new_relic_account_id
+  api_key = var.new_relic_user_api_key
+  region = var.new_relic_region                   # Valid regions are US and EU
+}
+
 
 module "eks_cluster" {
   source = "./eks-cluster"
@@ -29,7 +53,8 @@ module "kubernetes_objects" {
   repository_basepath = var.repository_basepath
 }
 
-module "newrelic" {
+module "newrelic_resources" {
+  depends_on = [module.kubernetes_objects]
   source = "./newrelic"
   new_relic_user_api_key = var.new_relic_user_api_key
   new_relic_account_id = var.new_relic_account_id

@@ -45,4 +45,4 @@ registry_server = ghcr.io
 # registry_password = "<github personal access token>"
 
 # Set this to the branch or tag you built with the github action
-# image_tag = "demo"
+image_tag = "demo"
