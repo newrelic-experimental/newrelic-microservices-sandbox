@@ -1,0 +1,40 @@
+name: prepare fork
+
+on:
+  fork
+
+jobs:
+  get-metadata:
+    name: Get Metadata
+    runs-on: ubuntu-latest
+    outputs:
+      latest_tag: ${{ steps.get_latest_tag.outputs.latest_tag }}
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v3
+      - name: Get Latest Tag
+        id: get_latest_tag
+        run: |
+          echo "::set-output name=latest_tag::$(git describe --tags --match='v*')\n"
+  prepare-demo:
+    needs: get-metadata
+    uses: ./.github/workflows/prepare-demo.yml
+    with:
+      source_ref: ${{ needs.get-metadata.outputs.latest_tag }}
+      branchname: demo
+      user1_name: User One
+      user1_email: userone@example.com
+      user2_name: User Two
+      user2_email: usertwo@example.com
+  change-default-branch:
+    runs-on: ubuntu-latest
+    needs: prepare-demo
+    steps:
+      - uses: octokit/request-action@v2.x
+        id: change_defaut_branch
+        with:
+          route: PATCH /repos/{repository}
+          repository: ${{ github.repository }}
+          default_branch: demo
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
