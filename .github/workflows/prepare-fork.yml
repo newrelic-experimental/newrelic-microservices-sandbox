@@ -36,8 +36,8 @@ jobs:
       - uses: octokit/request-action@v2.x
         id: change_defaut_branch
         with:
-          route: PATCH /repos/{repository}
-          repository: ${{ github.repository }}
+          route: PATCH /repos/{repo}
+          repo: ${{ github.repository }}
           default_branch: demo
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
