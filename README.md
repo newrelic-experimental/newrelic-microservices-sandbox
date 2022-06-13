@@ -20,10 +20,10 @@ A set of Terraform modules that will deploy a fully-instrumented microservices s
 3. Now, we'll prepare a demo branch and publish the docker images.
     1.  Click on the workflow named *prepare fork*.
     2.  On the right side of the screen, click "Run workflow", and then the green "Run workflow" button.
-    3.  Once the workflow completes, navigate to your repository's homepage.  You should see that you have a new branch named "demo" as well as some published packages (right side of the screen).
     ![Prepare Fork Workflow](./doc/assets/prepare_fork.png)
+    3.  Once the workflow completes, navigate to your repository's homepage.  You should see that you have a new branch named "demo" as well as some published packages (right side of the screen).
 4. Follow [these instructions](https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/managing-branches-in-your-repository/changing-the-default-branch#changing-the-default-branch) to change your default branch to the one named "demo" that you just created.
-5. clone your forked repo to your local machine.  It should fetch and checkout the "demo" branch, since you made it the default. From here on out, you'll be working locally in that branch to create infrastructure and configure Kubernetes to use the images you just published.
+5. `clone` your forked repo to your local machine.  It should fetch and checkout the "demo" branch, since you made it the default. From here on out, you'll be working locally in that branch to create infrastructure and configure Kubernetes to use the images you just published.
 6. cd into the `terraform` directory
 7. make a copy of the file `terraform.tfvars.sample` and rename it `terraform.tfvars`
 8. Open the file and edit the variables for your own configuration and deployment.
