@@ -12,12 +12,23 @@ A set of Terraform modules that will deploy a fully-instrumented microservices s
 3. Terraform installed
 
 ### Directions
-1. begin by cloning this repository
-2. cd into the `terraform` directory
-3. make a copy of the file `terraform.tfvars.sample` and rename it `terraform.tfvars`
-4. Open the file and edit the variables for your own configuration and deployment.
+1. Begin by *forking* this repository.  All work should be done from that fork.
+2. In your fork, click on the "Actions" tab in the reposiory navigation.
+    The first time you do this, you will be prompted with a message saying
+    "Workflows aren’t being run on this forked repository".  If you wish, examine the workflows in the `.github` folder within the project. Click the button
+    "I understand my workflows, go ahead and enable them".
+3. Now, we'll prepare a demo branch and publish the docker images.
+    1.  Click on the workflow named *prepare fork*.
+    2.  On the right side of the screen, click "Run workflow", and then the green "Run workflow" button.
+    3.  Once the workflow completes, navigate to your repository's homepage.  You should see that you have a new branch named "demo" as well as some published packages (right side of the screen).
+    ![Prepare Fork Workflow](./doc/assets/prepare_fork.png)
+4. Follow [these instructions](https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/managing-branches-in-your-repository/changing-the-default-branch#changing-the-default-branch) to change your default branch to the one named "demo" that you just created.
+5. clone your forked repo to your local machine.  It should fetch and checkout the "demo" branch, since you made it the default. From here on out, you'll be working locally in that branch to create infrastructure and configure Kubernetes to use the images you just published.
+6. cd into the `terraform` directory
+7. make a copy of the file `terraform.tfvars.sample` and rename it `terraform.tfvars`
+8. Open the file and edit the variables for your own configuration and deployment.
     
-    _Notes_: The Terraform module uses the [AWS resource provider](https://registry.terraform.io/providers/hashicorp/aws/latest/docs))
+    _Notes_: The Terraform module uses the [AWS resource provider](https://registry.terraform.io/providers/hashicorp/aws/latest/docs)
     to create AWS resources on your behalf. In order to do this, it must be configured properly with credentials, region, etc.
     There are several ways you can do this - using environment variables, or if you have installed the AWS cli, the Terraform provider
     will use the credentials stored in you home dir, as well as several other methods.  Configuring the module is out of the scope
@@ -26,8 +37,8 @@ A set of Terraform modules that will deploy a fully-instrumented microservices s
     Similarly, your New Relic license and API keys are used in several places and are provided as a standard Terraform variables.  You
     may set them in the .tfvars file for convenience, or you can use any of the standard methods for setting and overriding variables
     according to the [Terraform docs](https://www.terraform.io/language/values/variables#variables-on-the-command-line)
-5. run `terraform init`
-6. When you are ready to deploy, run `terraform apply`.  Terraform will provide a list of all of the resources its going to create
+9. run `terraform init`
+10. When you are ready to deploy, run `terraform apply`.  Terraform will provide a list of all of the resources its going to create
     and will prompt you for confirmation
 
     _Notes_:  This is going to create a 3-node Kubernetes cluster in EKS, an ALB, a VPC, and all of the necessary supporting
@@ -39,12 +50,12 @@ A set of Terraform modules that will deploy a fully-instrumented microservices s
     The default limit for the number of VPCs in each region per AWS account is usually in the single digits.  If you are using
     a shared account, it's possible that you may run into this limit.  In that case, recommend choosing another region,
     or requesting a quota increase.
-7. After 20-30 minutes, your cluster should be completely deployed.  Terraform will display the output from the module, which will
+11. After 20-30 minutes, your cluster should be completely deployed.  Terraform will display the output from the module, which will
     include the hostname of the loadbalancer as well as the path to the kubeconfig file it created, should you want to interface with the
     cluster directly via `kubectl`, etc.  At any time you can run `terraform output` from this directory to view those values.  Note that
     Terraform will have created a `terraform.tfstate` file.  This is how Terraform keeps track of what it has deployed.  Don't
     delete this file, otherwise Terraform will not be able to clean up!
-10. Run `terraform destroy` when you are done, and all created resources will be removed.
+12. Run `terraform destroy` when you are done, and all created resources will be removed.
 
 ## Getting Started
 
