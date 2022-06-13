@@ -15,7 +15,7 @@ output "loadbalancer_hostname" {
 }
 
 output "superheroes_workload_permalink" {
-  value = module.newrelic.superheroes_workload.permalink
+  value = module.newrelic_resources.superheroes_workload.permalink
 }
 # output "applications" {
 #   value = module.newrelic.applications

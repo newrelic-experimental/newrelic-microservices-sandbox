@@ -22,7 +22,7 @@
 ###############################
 # Image repository configuration
 
-registry_server = ghcr.io
+registry_server = "ghcr.io"
 
 # repository_basepath will be used to build
 # the url for the package images with the following template:
@@ -31,7 +31,7 @@ registry_server = ghcr.io
 # for example, repository_basepath = "supercoder/newrelic-microservices-sandbox"
 # will result in the gateway service image url:
 # ghcr.io/supercoder/newrelic-microservices-sandbox/gateway:whatever_my_tag_is
-# repository_basepath = <github username>/newrelic-microservices-sandbox
+# repository_basepath = "<github username>/newrelic-microservices-sandbox"
 
 # optional, if your forked repository is private, or
 # you have modified your package settings.
