@@ -15,7 +15,7 @@ COMMIT_2_DATE=$(date --date="3 day ago" -u +"%Y-%m-%dT%H:%M:%SZ")
 COMMIT_2_NAME=${INPUT_USER2_NAME:-"User Two"}
 COMMIT_2_EMAIL=${INPUT_USER2_EMAIL:-"usertwo@example.com"}
 
-WORKFLOW_TREE=$(git ls-tree $SRC .github charts terraform doc README.md | git mktree)
+WORKFLOW_TREE=$(git ls-tree $SRC .github charts terraform doc README.md .gitignore | git mktree)
 APPS_V1_TREE=$(git ls-tree backstage apps | git mktree)
 COMMIT_1_TREE=$({ git ls-tree $WORKFLOW_TREE; git ls-tree $APPS_V1_TREE; } | git mktree)
 
