@@ -8,7 +8,7 @@ jobs:
     name: Get Metadata
     runs-on: ubuntu-latest
     outputs:
-      latest_tag: ${{ steps.get_latest_tag.outputs.latest_tag }}
+      latest_tag: ${{ steps.get_latest_tag.outputs.tag }}
     steps:
       - name: Checkout Repo
         uses: actions/checkout@v3
@@ -16,8 +16,9 @@ jobs:
           fetch-depth: 0
       - name: Get Latest Tag
         id: get_latest_tag
-        run: |
-          echo "::set-output name=latest_tag::$(git describe --tags --match='v*')\n"
+        uses: "WyriHaximus/github-action-get-previous-tag@v1"
+        with:
+          fallback: main
   prepare-demo:
     needs: get-metadata
     uses: ./.github/workflows/prepare-demo.yml
