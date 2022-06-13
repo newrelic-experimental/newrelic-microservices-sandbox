@@ -15,6 +15,10 @@ data "newrelic_entity" "applications" {
   name = "${element(local.app_names, count.index)}"
   type = "APPLICATION"
   domain = "APM"
+  tag {
+    key = "accountID"
+    value = var.new_relic_account_id
+  }
 }
 
 resource "newrelic_entity_tags" "application_tags" {

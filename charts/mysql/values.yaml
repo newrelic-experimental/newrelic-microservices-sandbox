@@ -16,7 +16,7 @@ new_relic:
     key: license_key
     
 image:
-  repository: ghcr.io/ericmittelhammer/newrelic-microservices-sandbox/mysql
+  repository: ghcr.io/not-a-real-repo
   pullPolicy: IfNotPresent
   # Overrides the image tag whose default is the chart appVersion.
   tag: ""

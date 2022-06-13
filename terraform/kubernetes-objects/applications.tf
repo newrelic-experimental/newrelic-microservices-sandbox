@@ -9,6 +9,29 @@ resource "kubernetes_secret" "newrelic_applications" {
   }
 }
 
+resource "kubernetes_secret" "registry_auth" {
+
+  count = local.use_auth ? 1 : 0
+
+  metadata {
+    name = "docker-cfg"
+  }
+
+  type = "kubernetes.io/dockerconfigjson"
+
+  data = {
+    ".dockerconfigjson" = jsonencode({
+      auths = {
+        "${var.registry_server}" = {
+          "username" = var.registry_username
+          "password" = var.registry_password
+          "auth"     = base64encode("${var.registry_username}:${var.registry_password}")
+        }
+      }
+    })
+  }
+}
+
 resource "helm_release" "gateway" {
 
   depends_on = [helm_release.ingress_nginx]
@@ -29,6 +52,24 @@ resource "helm_release" "gateway" {
   set {
     name = "new_relic.license_key.key"
     value = local.new_relic_license_key_k8s_secret_key_name
+  }
+
+  set {
+    name = "image.repository"
+    value = "${local.image_repository_base}/gateway"
+  }
+
+  set {
+    name = "image.tag"
+    value = var.image_tag
+  }
+
+  dynamic set {
+    for_each = local.use_auth ? [1] : []
+    content {
+      name = "image.pullSecrets[0].name"
+      value = kubernetes_secret.registry_auth[0].metadata[0].name
+    }
   }
   
 }
@@ -54,6 +95,24 @@ resource "helm_release" "superheroes" {
     name = "new_relic.license_key.key"
     value = local.new_relic_license_key_k8s_secret_key_name
   }
+
+  set {
+    name = "image.repository"
+    value = "${local.image_repository_base}/superheroes"
+  }
+
+  set {
+    name = "image.tag"
+    value = var.image_tag
+  }
+
+  dynamic set {
+    for_each = local.use_auth ? [1] : []
+    content {
+      name = "image.pullSecrets[0].name"
+      value = kubernetes_secret.registry_auth[0].metadata[0].name
+    }
+  }
   
 }
   
@@ -78,6 +137,24 @@ resource "helm_release" "customers" {
     name = "new_relic.license_key.key"
     value = local.new_relic_license_key_k8s_secret_key_name
   }
+
+  set {
+    name = "image.repository"
+    value = "${local.image_repository_base}/customers"
+  }
+
+  set {
+    name = "image.tag"
+    value = var.image_tag
+  }
+
+  dynamic set {
+    for_each = local.use_auth ? [1] : []
+    content {
+      name = "image.pullSecrets[0].name"
+      value = kubernetes_secret.registry_auth[0].metadata[0].name
+    }
+  }
   
 }
 
@@ -92,6 +169,24 @@ resource "helm_release" "mysql" {
   chart      = var.mysql_chart
   
   recreate_pods = true
+
+  set {
+    name = "image.repository"
+    value = "${local.image_repository_base}/mysql"
+  }
+
+  set {
+    name = "image.tag"
+    value = var.image_tag
+  }
+
+  dynamic set {
+    for_each = local.use_auth ? [1] : []
+    content {
+      name = "image.pullSecrets[0].name"
+      value = kubernetes_secret.registry_auth[0].metadata[0].name
+    }
+  }
   
 }
 

@@ -22,6 +22,11 @@ module "kubernetes_objects" {
   superheroes_chart = abspath("${path.module}/../charts/superheroes")
   customers_chart = abspath("${path.module}/../charts/customers")
   mysql_chart = abspath("${path.module}/../charts/mysql")
+  image_tag = var.image_tag
+  registry_server = var.registry_server
+  registry_username = var.registry_username
+  registry_password = var.registry_password
+  repository_basepath = var.repository_basepath
 }
 
 module "newrelic" {

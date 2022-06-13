@@ -1,5 +1,8 @@
 locals {
   new_relic_license_key_k8s_secret_key_name = "license_key"
+  image_repository_base = "${var.registry_server}/${var.repository_basepath}"
+  use_auth = (var.registry_username != null && var.registry_password != null) ? true : false
+
 }
 
 data "aws_eks_cluster" "default" {
