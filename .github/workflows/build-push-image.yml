@@ -9,6 +9,13 @@ on:
 
   workflow_dispatch:
 
+  workflow_call:
+    inputs:
+      ref_name:
+        required: true
+        type: string
+        description: "ref to checkout and build images from"
+    
 jobs:
   build-and-push-image:
     strategy:
@@ -29,6 +36,8 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
+        with:
+          ref: ${{ inputs.ref_name || github.ref_name }}
 
       - name: Log in to the Container registry
         uses: docker/login-action@v1
