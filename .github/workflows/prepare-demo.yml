@@ -65,11 +65,11 @@ jobs:
           ref: backstage
       - name: Create Commits
         env:
-          INPUT_USER1_NAME: ${{github.event.inputs.user1_name}}
-          INPUT_USER1_EMAIL: ${{github.event.inputs.user1_email}}
-          INPUT_USER2_NAME: ${{github.event.inputs.user2_name}}
-          INPUT_USER2_EMAIL: ${{github.event.inputs.user2_email}}
-          INPUT_BRANCHNAME: ${{github.event.inputs.branchname}}
+          INPUT_USER1_NAME: ${{github.inputs.user1_name}}
+          INPUT_USER1_EMAIL: ${{github.inputs.user1_email}}
+          INPUT_USER2_NAME: ${{github.inputs.user2_name}}
+          INPUT_USER2_EMAIL: ${{github.inputs.user2_email}}
+          INPUT_BRANCHNAME: ${{github.inputs.branchname}}
           SOURCE_REF: ${{ env.SOURCE_REF }}
         run: |
           bash -x ./scripts/create-demo-commits.sh
