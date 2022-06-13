@@ -25,9 +25,6 @@ jobs:
             build_context: ./apps/mysql
 
     runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      packages: write
 
     steps:
       - name: Checkout repository
