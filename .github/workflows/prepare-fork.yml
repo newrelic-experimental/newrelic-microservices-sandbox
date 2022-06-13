@@ -29,19 +29,20 @@ jobs:
       user1_email: userone@example.com
       user2_name: User Two
       user2_email: usertwo@example.com
-  change-default-branch:
-    runs-on: ubuntu-latest
-    needs: prepare-demo
-    steps:
-      - uses: octokit/request-action@v2.x
-        id: change_defaut_branch
-        with:
-          route: PATCH /repos/{repo}
-          repo: ${{ github.repository }}
-          default_branch: demo
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  # change-default-branch:
+  #   runs-on: ubuntu-latest
+  #   needs: prepare-demo
+  #   steps:
+  #     - uses: octokit/request-action@v2.x
+  #       id: change_defaut_branch
+  #       with:
+  #         route: PATCH /repos/{repo}
+  #         repo: ${{ github.repository }}
+  #         default_branch: demo
+  #       env:
+  #         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   build-images:
+    needs: prepare-demo
     uses:
       ./.github/workflows/build-push-image.yml
     with:
