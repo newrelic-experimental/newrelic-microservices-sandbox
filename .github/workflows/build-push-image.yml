@@ -57,6 +57,7 @@ jobs:
           tags: |
             type=ref,event=tag
             type=raw,value=${{ steps.checkout_data.outputs.head_ref_short }}
+            type=raw,value=${{ steps.checkout_data.outputs.sha_short }}
 
       - id: sshrepo
         name: get the SSH version of the git repository
