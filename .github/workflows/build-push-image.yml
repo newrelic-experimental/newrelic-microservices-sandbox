@@ -33,16 +33,13 @@ jobs:
 
     runs-on: ubuntu-latest
 
+    env:
+      BUILD_REF: ${{ inputs.ref_name || github.ref_name }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
         with:
-          ref: ${{ inputs.ref_name || github.ref_name }}
-
-      
-      - name: Get full HEAD ref
-        id: head_ref
-        run: echo "::set-output name=value::$(git symbolic-ref HEAD)"
+          ref: ${{ env.BUILD_REF }}
 
       - name: Extract metadata (tags, labels) for Docker
         id: meta
@@ -53,7 +50,7 @@ jobs:
             type=ref,event=branch
             type=ref,event=tag
             type=ref,event=pr
-            type=raw,value=${{ steps.head_ref.outputs.value }}
+            type=raw,value=${{ env.BUILD_REF }}
       
       - id: sshrepo
         name: get the SSH version of the git repository
