@@ -233,6 +233,11 @@ resource "helm_release" "loadgen" {
     name = "loadtest.locust_host"
     value = "http://${data.kubernetes_service.ingress_nginx_controller.status.0.load_balancer.0.ingress.0.hostname}"
   }
+
+  set {
+    name = "environment.IMAGE_TAG"
+    value = var.image_tag
+  }
   
   # set {
   #   name = "master.args"
