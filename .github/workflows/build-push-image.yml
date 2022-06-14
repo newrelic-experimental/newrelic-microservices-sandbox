@@ -39,24 +39,34 @@ jobs:
         with:
           ref: ${{ inputs.ref_name || github.ref_name }}
 
-      - name: Log in to the Container registry
-        uses: docker/login-action@v1
-        with:
-          registry: ghcr.io
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
+      
+      - name: Get full HEAD ref
+        id: head_ref
+        run: echo "::set-output name=value::$(git symbolic-ref HEAD)"
 
       - name: Extract metadata (tags, labels) for Docker
         id: meta
         uses: docker/metadata-action@v3
         with:
           images: ghcr.io/${{ github.repository }}/${{ matrix.apps.image_name }}
+          tags: |
+            type=ref,event=branch
+            type=ref,event=tag
+            type=ref,event=pr
+            type=raw,value=${{ steps.head_ref.outputs.value }}
       
       - id: sshrepo
         name: get the SSH version of the git repository
         uses: ASzc/change-string-case-action@v2
         with:
           string: ${{ format('git@github.com:{0}.git', github.repository) }}
+
+      - name: Log in to the Container registry
+        uses: docker/login-action@v1
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Build and push Docker image
         uses: docker/build-push-action@v2
