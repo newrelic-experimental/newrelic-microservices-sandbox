@@ -56,7 +56,7 @@ jobs:
           images: ghcr.io/${{ github.repository }}/${{ matrix.apps.image_name }}
           tags: |
             type=ref,event=tag
-            type=raw,value=${{ steps.checkout_data.output.head_ref_short }}
+            type=raw,value=${{ steps.checkout_data.outputs.head_ref_short }}
 
       - id: sshrepo
         name: get the SSH version of the git repository
@@ -81,4 +81,4 @@ jobs:
           build-args: |
             REPOSITORY_URL=${{ steps.sshrepo.outputs.lowercase }}
             COMMIT_SHA=${{ steps.checkout_data.outputs.sha_short }}
-            RELEASE_TAG=${{ steps.checkout_data.output.head_ref_short }}
+            RELEASE_TAG=${{ steps.checkout_data.outputs.head_ref_short }}
