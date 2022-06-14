@@ -44,10 +44,10 @@ jobs:
       - name: Checkout Data
         id: checkout_data
         run: |
-          echo "::set-output name=head_ref_full::$(git symbolic-ref HEAD)";
-          echo "::set-output name=head_ref_short::$(git symbolic-ref --short HEAD)";
-          echo "::set-output name=sha_full::$(git rev-parse HEAD)";
-          echo "::set-output name=sha_short::$(git rev-parse --short HEAD)";
+          echo "::set-output name=head_ref_full::$(git symbolic-ref HEAD)"
+          echo "::set-output name=head_ref_short::$(git symbolic-ref --short HEAD)"
+          echo "::set-output name=sha_full::$(git rev-parse HEAD)"
+          echo "::set-output name=sha_short::$(git rev-parse --short HEAD)"
 
       - name: Extract metadata (tags, labels) for Docker
         id: meta
