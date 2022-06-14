@@ -47,9 +47,7 @@ jobs:
         with:
           images: ghcr.io/${{ github.repository }}/${{ matrix.apps.image_name }}
           tags: |
-            type=ref,event=branch
             type=ref,event=tag
-            type=ref,event=pr
             type=raw,value=${{ env.BUILD_REF }}
       
       - id: sshrepo
