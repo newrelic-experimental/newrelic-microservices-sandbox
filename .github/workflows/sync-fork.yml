@@ -24,6 +24,3 @@ jobs:
       - name: Push Tags
         # push tags that are reachable from main
         run: git push -f origin $(git --no-pager tag --merged main | tr '\n' ' ')
-  prepare-fork:
-    needs: sync-fork
-    uses: ./.github/workflows/prepare-fork.yml
