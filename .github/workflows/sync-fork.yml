@@ -1,0 +1,29 @@
+name: sync fork
+
+on:
+  workflow_dispatch:
+    
+jobs:
+  sync-fork:
+    name: Run git commands
+    if: github.repository_owner != 'newrelic-experimental'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - name: Add Upstream
+        run: git remote add upstream https://github.com/newrelic-experimental/newrelic-microservices-sandbox.git
+      - name: Fetch Upstream
+        run: git fetch upstream
+      - name: Push Main
+        run: git push -f origin refs/remotes/upstream/main:refs/heads/main
+      - name: Push Backstage
+        run: git push -f origin refs/remotes/upstream/backstage:refs/heads/backstage
+      - name: Push Tags
+        # push tags that are reachable from main
+        run: git push -f origin $(git --no-pager tag --merged main | tr '\n' ' ')
+  prepare-fork:
+    needs: sync-fork
+    uses: ./.github/workflows/prepare-fork.yml
