@@ -90,9 +90,11 @@ This is generally the least complicated way to do it, but it has two drawbacks:
  ### Pull the newest changes in and redeploy
  This is slightly more complicated, but much more efficient.  Only recommended if you are good with git, as you are going to be syncing modifying the history of both your remote and local repos.
 
-  1. In your fork, run the `sync fork` workflow.  This will force update the repo with the latest commits and tags from `newrelic-experimental/newrelic-microservices-sandbox`.
-  2. Run the `prepare fork` workflow, which will rebuild your `demo` branch and rebuild the containers.
-  3. Now you must sync your local repo to match what you just did in the remote.  Because the `prepare fork` workflow always creates new commits, you'll never be able to automaticaly merge what you have locally.  Thus, you'll have to manually update your local environment, largely ignoring the warnings git spits out at you.  
+  1. Before running anything, temporarily switch your default branch back to `main`
+  2. In your fork, run the `sync fork` workflow.  This will force update the repo with the latest commits and tags from `newrelic-experimental/newrelic-microservices-sandbox`.
+  3. Run the `prepare fork` workflow, which will rebuild your `demo` branch and rebuild the containers.
+  4. Switch your default branch back to `demo`
+  5. Now you must sync your local repo to match what you just did in the remote.  Because the `prepare fork` workflow always creates new commits, you'll never be able to automaticaly merge what you have locally.  Thus, you'll have to manually update your local environment, largely ignoring the warnings git spits out at you.  
         1. Fetch the latest from your remote:
             ```
             $ git fetch origin

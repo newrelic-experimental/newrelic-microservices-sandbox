@@ -25,4 +25,4 @@ jobs:
         run: git push -f origin refs/remotes/upstream/backstage:refs/heads/backstage
       - name: Push Tags
         # push tags that are reachable from main
-        run: git push -f origin $(git --no-pager tag --merged main | tr '\n' ' ')
+        run: git push -f origin $(git --no-pager tag --merged upstream/main | tr '\n' ' ')
