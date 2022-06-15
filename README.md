@@ -74,29 +74,48 @@ One of the terraform outputs is a link to a workload in your account containing 
 
 Alternatively, you can use the global filter in [New Relic Explorer](https://docs.newrelic.com/docs/new-relic-solutions/new-relic-one/core-concepts/new-relic-explorer-view-performance-across-apps-services-hosts/#filter-tag) to filter for `project = <whatever your cluster name is> OR clusterName = <whatever your cluster name is>`
 
-## Building
+## Updating your stack
+Occasionally, you may want to bring the latest changes from the upstream original repository into your fork and redeploy your apps.  There are generally two ways to do this:
 
-If you want experiment with, or make changes to this stack, you generally have two options:
+### Delete everything and start over
+This is generally the least complicated way to do it, but it has two drawbacks:
+ - you run the risk of orphaning some cloud resources if you don't properly destroy them before deleting the repository, leaving you to track them down and delete them by hand
+ - It takes a while to delete and then re-recreate all of the resources from scratch, when you may just want some minor changes applied.
+ If you want to go this route, follow these steps:
+ 1. *MAKE SURE YOU RUN `terraform destroy` AND ALL RESOURCES ARE DELETED
+ 2. Delete your fork on GitHub
+ 3. Delete your entire local repository directory.
+ 4. Start from step 1 at the beginning of this doc.
 
-- Edit and deploy locally using Docker Compose.  There is a `docker-compose` file in the root of the [apps](./apps/) directory.  This will deploy a single instance of each app, but it will bypass all of [configuration that is handled by terraform and helm](./terraform/kubernetes-objects/applications.tf), so there won't be any New Relic instrumentation; just the apps.
+ ### Pull the newest changes in and redeploy
+ This is slightly more complicated, but much more efficient.  Only recommended if you are good with git, as you are going to be syncing modifying the history of both your remote and local repos.
 
-- Edit locally and deploy to AWS via GitHub Actions.  This is functionally the same as if you followed the installation directions above, except you will be deploying from _your own_ GitHub repository.  
+  1. In your fork, run the `sync fork` workflow.  This will force update the repo with the latest commits and tags from `newrelic-experimental/newrelic-microservices-sandbox`.
+  2. Run the `prepare fork` workflow, which will rebuild your `demo` branch and rebuild the containers.
+  3. Now you must sync your local repo to match what you just did in the remote.  Because the `prepare fork` workflow always creates new commits, you'll never be able to automaticaly merge what you have locally.  Thus, you'll have to manually update your local environment, largely ignoring the warnings git spits out at you.  
+        1. Fetch the latest from your remote:
+            ```
+            $ git fetch origin
+            ```
+        2. Update your local branch to match the remote one:
+            ```
+            $ git update-ref refs/heads/demo $(git rev-parse refs/remotes/origin/demo)
+            ```
+        3. Update your local working copy to match:
+            ```
+            $ git checkout -f demo
+            ```
+        4. Now your local copy should have all the recent updates from the upstream source, and you can re-apply your terraform config.  There is, however, one caveat.  The newly built images were built from the same branch, `demo`, as the last time you built them.  Helm will not know that you have updated them if you use the same tag.  Browse to your published package to get the name of the tag that was made from the commit sha.  This should be the same as what you get by running  
+            ```
+            $ git rev-parse --short refs/heads/demo
+            ```
+            but recommend verifying the package to be sure.
 
-  This project has a [GitHub workfow](.github/workflows/build-push-image.yml) that will execute every time a change within any of the application dirs is pushed to `main`, or when a tag is created with a semver format prefixed with "v" (ex: `v1.0.1`).  A docker image will be built for any changed apps and pushed to the GitHub Container Registry of the user who pushed the change (specifically, the [`github.actor`](https://docs.github.com/en/actions/learn-github-actions/contexts)).  
+            open up your `terraform.tfvars` file, and set the `image_tag` to that value.
+        
+        5. run `terraform apply` from the `terraform` directory and you'll be running the latest version!
 
-  By *forking* this repo, you'll have a remote GitHub repo and container registry to build and host the images.  
-  
-  After forking & cloning, a typical workflow would be:  
-    1. Make local changes
-    2. Commit
-    3. Create a new tag in the semver format (ex: `v1.0.2`)
-    4. Push your changes to your fork
-    5. Followed by the tag you just created (ex: `git push v1.0.2`)
-    6. Wait for the build actions to complete.
-    The first time you do this, you'll have to make the published packages [publicly visible](https://docs.github.com/en/packages/learn-github-packages/configuring-a-packages-access-control-and-visibility#configuring-visibility-of-container-images-for-your-personal-account), otherwise your EKS cluster won't be able to pull them. 
-    7. Edit the `Chart.yml` files within the [charts](./charts/) directory for each of the apps you want to redeploy.  Increment the `version` property.  This forces helm m to run.  Change the `appVersion` property to the tag that you created in step 3.  This gets passed through to the Kubernetes yml as the version of the container to deploy.
-    8. Run `terraform apply` as described in the installation instructions above.
-    9. Optionally, you can commit & push the changes to the Chart.yml files but rember that terraform works _locally_, sending API commands to your EKS cluster to pull the images that live in your GitHub container registry.  Changes to these files don't automatically trigger a deployment.
+
 
 
 ## Contributing
