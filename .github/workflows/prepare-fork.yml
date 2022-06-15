@@ -2,7 +2,6 @@ name: prepare fork
 
 on:
   workflow_dispatch:
-  workflow_call:
 
 jobs:
   get-metadata:
@@ -14,7 +13,6 @@ jobs:
       - name: Checkout Repo
         uses: actions/checkout@v3
         with:
-          ref: main
           fetch-depth: 0
       - name: Get Latest Tag
         id: get_latest_tag

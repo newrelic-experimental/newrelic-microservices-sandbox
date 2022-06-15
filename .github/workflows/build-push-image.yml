@@ -1,11 +1,11 @@
 name: Build and push docker images 
 
 on:
-    # push:
-    # tags:
-    #   - 'v[0-9]+.[0-9]+.[0-9]+'
-    # branches:
-    #   - 'demo*'
+  push:
+    tags:
+      - 'v[0-9]+.[0-9]+.[0-9]+'
+    branches:
+      - 'demo*'
 
   workflow_dispatch:
 
