@@ -12,7 +12,7 @@ A set of Terraform modules that will deploy a fully-instrumented microservices s
 3. Terraform installed
 
 ### Directions
-1. Begin by *forking* this repository.  All work should be done from that fork.
+1. Begin by *forking* this repository.  Be sure to include all branches. All work should be done from that fork.
 2. In your fork, click on the "Actions" tab in the reposiory navigation.
     The first time you do this, you will be prompted with a message saying
     "Workflows aren’t being run on this forked repository".  If you wish, examine the workflows in the `.github` folder within the project. Click the button
