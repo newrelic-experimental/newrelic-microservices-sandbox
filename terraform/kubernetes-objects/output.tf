@@ -1,5 +1,5 @@
 output "kubeconfig" {
-  value = abspath("${path.module}/${local_file.kubeconfig.filename}")
+  value = abspath("./${local_file.kubeconfig.filename}")
 }
 
 output "loadbalancer_hostname" {
