@@ -52,11 +52,6 @@ resource "helm_release" "newrelic" {
   }
   
   set {
-	  name = "global.lowDataMode"
-	  value = true
-  }
-  
-  set {
 	  name = "ksm.enabled"
 	  value = true
   }
