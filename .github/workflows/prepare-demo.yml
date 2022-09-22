@@ -1,0 +1,80 @@
+name: prepare demo
+
+on:
+  workflow_dispatch:
+    inputs:
+      branchname:
+        required: true
+        type: string
+        description: "Name of the branch that will contain the modified history"
+        default: "demo"
+      user1_name:
+        required: true
+        type: string
+        description: "Name of the user who made the orginal changes."
+      user1_email:
+        required: true
+        type: string
+        description: "Email of the user who made the orginal changes."
+      user2_name:
+        required: true
+        type: string
+        description: "Name of the user who made the updated changes."
+      user2_email:
+        required: true
+        type: string
+        description: "Email of the user who made the updated changes."
+  
+  workflow_call:
+    inputs:
+      source_ref:
+        required: true
+        type: string
+        description: "git ref to the source to build from"
+      branchname:
+        required: true
+        type: string
+        description: "Name of the branch that will contain the modified history"
+        default: "demo"
+      user1_name:
+        required: true
+        type: string
+        description: "Name of the user who made the orginal changes."
+      user1_email:
+        required: true
+        type: string
+        description: "Email of the user who made the orginal changes."
+      user2_name:
+        required: true
+        type: string
+        description: "Name of the user who made the updated changes."
+      user2_email:
+        required: true
+        type: string
+        description: "Email of the user who made the updated changes."
+env:
+  SOURCE_REF: ${{ inputs.source_ref || github.ref_name}}
+jobs:
+  prepare-branch:
+    name: Prepare Branch
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Checkout Backstage Branch
+        uses: actions/checkout@v3
+        with: 
+          ref: backstage
+      - name: Create Commits
+        env:
+          INPUT_USER1_NAME: ${{inputs.user1_name}}
+          INPUT_USER1_EMAIL: ${{inputs.user1_email}}
+          INPUT_USER2_NAME: ${{inputs.user2_name}}
+          INPUT_USER2_EMAIL: ${{inputs.user2_email}}
+          INPUT_BRANCHNAME: ${{inputs.branchname}}
+          SOURCE_REF: ${{ env.SOURCE_REF }}
+        run: |
+          bash -x ./scripts/create-demo-commits.sh
+        shell: bash
+      - name: Push Branch
+        run: |
+          git push -f origin ${{ inputs.branchname }} 
+

@@ -1,0 +1,44 @@
+version: "3.9"
+services:
+  gateway:
+    build: gateway
+    ports:
+      - "8080:3000"
+    depends_on:
+      - superheroes
+      - customers
+    environment:
+      HTTP_PORT: "3000"
+      AUTH_ENABLED: "true"
+      SUPERHEROES_SERVICE_HOST: "superheroes"
+      SUPERHEROES_SERVICE_PORT: "5000"
+      CUSTOMERS_SERVICE_HOST: "customers"
+      CUSTOMERS_SERVICE_PORT: "5010"
+      
+  superheroes:
+    build: superheroes
+    environment:
+      HTTP_PORT: "5000"
+    ports:
+      - "8081:5000"
+      
+  customers:
+    build: customers
+    depends_on:
+      - db
+    environment:
+      PORT: "5010"
+      MYSQL_HOST: "db"
+      MYSQL_USERNAME: "root"
+      MYSQL_PASSWORD: "password"
+    ports:
+      - "8082:5010"
+      
+  db:
+    build: mysql
+    ports: 
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: "password"
+      MYSQL_DATABASE: "customers"
+    #command: ["mysqld", "&&", "mysql", "-uroot", "-p\"password", "<", "/var/data/customers.sql"]

@@ -1,0 +1,34 @@
+swagger: '2.0'
+info:
+  version: "2.0.0"
+  title: "New Relic Microservices Sandbox"
+  description: >
+    A sample stack of microservices to help you kick the tires on Observability.
+
+
+    To experiment with the api, scroll down to the `/customers/token` route.  Click "Try it out",
+    and then "Execute".  The response will include a token and the customer object
+    the token was assigned to.
+    
+    Scroll back up here, click on the "Authorize" button
+    on the right, paste the token into field, click "Authorize", and then "Close".
+    The token will now be passed in the header for all requests.
+
+basePath: /api/v1
+
+securityDefinitions:
+  ApiKeyAuth: 
+    type: apiKey
+    in: header
+    name: X-Api-Key
+
+security:
+  - ApiKeyAuth: []
+
+paths:
+  /customers/token:
+    post:
+      security: [] # remove security from the token url
+x-apis:
+    superheroes: http://${superheroes_host}:${superheroes_port}/v1/swagger.json
+    customers: http://${customers_host}:${customers_port}/swagger/doc.json

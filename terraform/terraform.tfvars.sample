@@ -1,0 +1,48 @@
+# all values must be specificed within quotes!
+
+# This name must be unique within your AWS and New Relic accounts.
+# will be added as a tag named "Project" to all 
+# resources created in both AWS and New Relic.
+# uncomment and edit to customize
+# cluster_name = "newrelic-microservices-sandbox"
+
+# will be added as a tag to all resources
+# owner = "<your username, etc.>"
+
+###################################
+# new relic configuration
+
+# new_relic_license_key = "<your nr license key>"
+# new_relic_user_api_key = "<your user api key>"
+# new_relic_account_id = "<your newrelic account id>"
+# new_relic_region = "<US or EU>" # defaults to US if you don't uncomment
+####################################
+
+
+###############################
+# Image repository configuration
+
+registry_server = "ghcr.io"
+
+# repository_basepath will be used to build
+# the url for the package images with the following template:
+# ${registry_server}/${repository_basepath}/${image_name}:${image_tag}
+# For github registries, use: <github username>/<name of your forked repository>
+# for example, repository_basepath = "supercoder/newrelic-microservices-sandbox"
+# will result in the gateway service image url:
+# ghcr.io/supercoder/newrelic-microservices-sandbox/gateway:whatever_my_tag_is
+# repository_basepath = "<github username>/newrelic-microservices-sandbox"
+
+# optional, if your forked repository is private, or
+# you have modified your package settings.
+# by default forked repositories in personal accounts are public,
+# so you probably don't need to to uncomment these.  If your
+# repo is private or your packages have private visibility,
+# use your github username as the username, and a github personal
+# access token with read package access as the password
+# more info:  https://docs.github.com/en/packages/learn-github-packages/about-permissions-for-github-packages
+# registry_username = "<github username>"
+# registry_password = "<github personal access token>"
+
+# Set this to the branch or tag you built with the github action
+image_tag = "demo"

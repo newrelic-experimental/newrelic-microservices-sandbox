@@ -1,0 +1,85 @@
+name: Build and push docker images 
+
+on:
+  push:
+    tags:
+      - 'v[0-9]+.[0-9]+.[0-9]+'
+    branches:
+      - 'demo*'
+
+  workflow_dispatch:
+
+  workflow_call:
+    inputs:
+      ref_name:
+        required: true
+        type: string
+        description: "ref to checkout and build images from"
+    
+jobs:
+  build-and-push-image:
+    strategy:
+      fail-fast: true
+      matrix:
+        apps:
+          - image_name: gateway
+            build_context: ./apps/gateway
+          - image_name: customers
+            build_context: ./apps/customers
+          - image_name: superheroes
+            build_context: ./apps/superheroes
+          - image_name: mysql
+            build_context: ./apps/mysql
+
+    runs-on: ubuntu-latest
+
+    env:
+      BUILD_REF: ${{ inputs.ref_name || github.ref_name }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+        with:
+          ref: ${{ env.BUILD_REF }}
+
+      - name: Checkout Data
+        id: checkout_data
+        run: |
+          echo "::set-output name=head_ref_full::$(git symbolic-ref HEAD)"
+          echo "::set-output name=head_ref_short::$(git symbolic-ref --short HEAD)"
+          echo "::set-output name=sha_full::$(git rev-parse HEAD)"
+          echo "::set-output name=sha_short::$(git rev-parse --short HEAD)"
+
+      - name: Extract metadata (tags, labels) for Docker
+        id: meta
+        uses: docker/metadata-action@v3
+        with:
+          images: ghcr.io/${{ github.repository }}/${{ matrix.apps.image_name }}
+          tags: |
+            type=ref,event=tag
+            type=raw,value=${{ steps.checkout_data.outputs.head_ref_short }}
+            type=raw,value=${{ steps.checkout_data.outputs.sha_short }}
+
+      - id: sshrepo
+        name: get the SSH version of the git repository
+        uses: ASzc/change-string-case-action@v2
+        with:
+          string: ${{ format('git@github.com:{0}.git', github.repository) }}
+
+      - name: Log in to the Container registry
+        uses: docker/login-action@v1
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v2
+        with:
+          context: ${{ matrix.apps.build_context }}
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          build-args: |
+            REPOSITORY_URL=${{ steps.sshrepo.outputs.lowercase }}
+            COMMIT_SHA=${{ steps.checkout_data.outputs.sha_short }}
+            RELEASE_TAG=${{ steps.checkout_data.outputs.head_ref_short }}
