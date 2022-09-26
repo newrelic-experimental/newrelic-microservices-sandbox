@@ -14,7 +14,7 @@ info:
     on the right, paste the token into field, click "Authorize", and then "Close".
     The token will now be passed in the header for all requests.
 
-basePath: /api/v1
+basePath: /api/v2
 
 securityDefinitions:
   ApiKeyAuth: 
@@ -30,5 +30,5 @@ paths:
     post:
       security: [] # remove security from the token url
 x-apis:
-    superheroes: http://${superheroes_host}:${superheroes_port}/v1/swagger.json
+    superheroes: http://${superheroes_host}:${superheroes_port}/v2/swagger.json
     customers: http://${customers_host}:${customers_port}/swagger/doc.json

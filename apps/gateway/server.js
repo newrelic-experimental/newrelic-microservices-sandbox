@@ -73,7 +73,7 @@ router.get('/ping', (ctx, next) => {
 
 router.use('/api/:version/(.*)', apiversion);
 
-const authUrl = `${customers_protocol}://${customers_host}:${customers_port}/v1/customers/authorize`
+const authUrl = `${customers_protocol}://${customers_host}:${customers_port}/v2/customers/authorize`
 router.all('apiProxy', '/api/(.*)', auth(authEnabled, authUrl), proxy({
   '/api/(.*)/superheroes(.*)': `${superheroes_protocol}://${superheroes_host}:${superheroes_port}/$1/superheroes$2`,
   '/api/(.*)/customers(.*)': `${customers_protocol}://${customers_host}:${customers_port}/$1/customers$2`

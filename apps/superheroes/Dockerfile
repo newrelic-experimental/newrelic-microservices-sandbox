@@ -1,6 +1,3 @@
-# Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
-# SPDX-License-Identifier: MIT-0
-# Use an official Python runtime as an image
 FROM python:3.9-slim
 
 RUN apt-get update \
@@ -22,7 +19,7 @@ ARG RELEASE_TAG
 
 ENV NEW_RELIC_METADATA_REPOSITORY_URL=$REPOSITORY_URL
 ENV NEW_RELIC_METADATA_COMMIT=$COMMIT_SHA
-ENV NEW_RELIC_METADATA_RELEASE_TAG=$RELEASE_TAG
+#ENV NEW_RELIC_METADATA_RELEASE_TAG=$RELEASE_TAG
 
 # ENV AGG_APP_URL='http://prodinfo.octank-mesh-ns.svc.cluster.local:3000/productAgreement'
 

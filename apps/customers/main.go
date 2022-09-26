@@ -18,7 +18,7 @@ import (
 	_ "github.com/newrelic/go-agent/v3/integrations/nrmysql"
 	"github.com/newrelic/go-agent/v3/newrelic"
 	logrus "github.com/sirupsen/logrus"
-	ginlogrus "github.com/toorop/gin-logrus"
+	"github.com/toorop/gin-logrus"
 )
 
 const NrMysqlCtxKey = "NEW_RELIC_MYSQL_CONTEXT"
@@ -102,6 +102,14 @@ func main() {
 		v1.GET("/customers/:id", getCustomer(db))
 		v1.POST("/customers/token", token(db))
 		v1.POST("/customers/authorize", authorize(db))
+	}
+
+	v2 := router.Group("/v2")
+	{
+		v2.Use(ApiVersionAttribute("v2"))
+		v2.GET("/customers/:id", getCustomer(db))
+		v2.POST("/customers/token", token(db))
+		v2.POST("/customers/authorize", authorize(db))
 	}
 
 	router.Run() // listen and serve on 0.0.0.0:8080 (for windows "localhost:8080")

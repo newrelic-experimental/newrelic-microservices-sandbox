@@ -3,7 +3,7 @@ module.exports = function createAuthMiddleware(authEnabled, authorizeUrl) {
   
   return async (ctx, next) => {
     
-   if (!authEnabled || ctx.path == '/api/v1/customers/token' || ctx.path == '/api/v1/customers/authorize') {
+   if (!authEnabled || ctx.path == '/api/v2/customers/token' || ctx.path == '/api/v2/customers/authorize') {
      return next();
    } else {
      const { default: fetch } = await import('node-fetch');
